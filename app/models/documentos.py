@@ -9,5 +9,5 @@ class Documento(db.Model):
     # formato (db.String png, pdf, doc, xls)
     # link (db.String -> google drive)
 
-    def __repr__(self):
-        return f"Documento('{self.}','{self.}','{self.}','{self.}')"
+    #def __repr__(self):
+    #    return f"Documento('{self.}','{self.}','{self.}','{self.}')"
