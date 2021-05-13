@@ -2,12 +2,12 @@ from app import db
 
 class Documento(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    # nome (título do documento)
+    título = db.Column(db.String(150), nullable=False)
     # matéria (db.List código)
-    # autor (prof ou autos msm)
-    # tipo (db.Sting(5) prova, lista, livro)
-    # formato (db.String png, pdf, doc, xls)
-    # link (db.String -> google drive)
+    autor = db.Column(db.String(120))
+    tipo = db.Column(db.String(5), nullable=False)
+    formato = db.Column(db.String(3), nullable=False)
+    link = db.Column(db.String(120))
 
-    #def __repr__(self):
-    #    return f"Documento('{self.}','{self.}','{self.}','{self.}')"
+    def _repr_(self):
+        return f"{self.id} - {self.título}.{self.formato} ({self.autor}):\n\tLink:{self.link})"
