@@ -1,5 +1,7 @@
 from app import db
 
+# podemos tirar isso né?
+# nao faz muito sentido em matérias como cálculo
 class Docente(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     # Matrícula SIAPE não é obrigatória

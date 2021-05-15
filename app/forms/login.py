@@ -3,9 +3,10 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length
 
 class Login(FlaskForm):
-    dre = StringField('DRE', validators=[DataRequired(), Length(min=9, max=9, message="Insira apenas 9 digitos!")])
+    dre = StringField('DRE', validators=[DataRequired(message="Insira seu DRE!"), 
+                                         Length(min=9, max=9, message="Insira apenas 9 digitos!")])
     
-    senha = PasswordField('Senha', validators=[DataRequired()])
+    senha = PasswordField('Senha', validators=[DataRequired(message="Insira sua senha!")])
     
     lembrar = BooleanField('Lembrar de mim!')
     

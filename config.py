@@ -5,8 +5,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class BaseConfig(object):
     # Configuração principal
-    SECRET_KEY = os.environ.get('SECRET_KEY') # or "escolher uma chave"
-    SECURITY_PASSORD_SALT = 'definir_uma_chave'
+    SECRET_KEY = os.environ.get('SECRET_KEY')  or 'escolher uma chave'
+    SECURITY_PASSORD_SALT = 'bomsabadopvctbm'
+    WTF_CSRF_SECRET_KEY = 'pq'
     DEBUG = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
@@ -25,6 +26,7 @@ class BaseConfig(object):
 
 
 class DevelopmentConfig(BaseConfig):
-    DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///'+os.path.join(basedir,"app.db")
-    
+    # DEBUG = True
+    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///'+os.path.join(basedir,"app.db")
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///site.db'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False

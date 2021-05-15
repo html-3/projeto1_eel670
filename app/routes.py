@@ -1,4 +1,3 @@
-from werkzeug.utils import html
 from app.decoradores import check_confirmed
 from app import app, db, bcrypt
 from datetime import datetime
@@ -9,26 +8,51 @@ from app.email import enviar_email
 from app.decoradores import check_confirmed
 from app.forms.cadastro import CadastroDiscente
 from app.forms.login import Login
-from app.models.discente import Usuario 
+from app.models.discente import Usuario, Dados
 from app.models.docente import Docente
-from app.models.documentos import Documento
+from app.models.documento import Doc
 
-@app.route("/")
+@app.route("/", methods = ["GET"])
 @app.route("/home")
 def home():
-    return render_template('home.html') # (posts=posts) 
+    return render_template('main/home.html', title='Home')
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    form = Login()
+    if form.validate_on_submit():
+        usuario = Usuario.query.filter_by(nome_usuario=form.nome_usuario.data).first()
+        if usuario and bcrypt.check_password_hash(usuario.senha, form.senha.data):
+            login_user(usuario, lembrar=form.lembrar.data)
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('home'))
+        else:
+            flash('Acesso mal sucedido. Por favor reveja usuario e senha', 'danger')
+    return render_template('usuario/login.html', title='Login', form=form)
 
 @app.route("/cadastro", methods = ["GET","POST"])
 def cadastro():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = CadastroDiscente()
+    # cadastro nao é confirmado corretamente, nao envia erro, nao sabemos qual é o problema
     if form.validate_on_submit():
         hashed_senha = bcrypt.generate_password_hash(form.senha.data).decode('utf-8')
-        usuario = Usuario(nome_usuario=form.nome_usuario.data, senha=hashed_senha, email= form.email.data)
+        usuario = Usuario(
+                        nome_usuario=form.nome_usuario.data, 
+                        senha=hashed_senha, 
+                        email=form.email.data)
+        dados = Dados(
+                        dre=form.dre.data, 
+                        nome=form.nome.data, 
+                        curso= form.curso.data,
+                        periodo= form.periodo.data)
         db.session.add(usuario)
+        db.session.add(dados)
         db.session.commit()
-        
+
         token = gerar_token(usuario.email)
         confirmar_url = url_for('confirmar_email', token=token, _external=True)
         html = render_template('usuario/email.html', confirmar_url=confirmar_url)
@@ -39,7 +63,7 @@ def cadastro():
 
         flash('Um link de confirmação foi enviado via email.', 'success')
         return redirect(url_for('n_confirmado'))
-    return render_template('cadastro.html', title='Cadastro', form=form)   
+    return render_template('usuario/cadastro.html', title='Cadastro', form=form)   
 
 @app.route('/confirmar/<token>')
 @login_required
@@ -66,22 +90,6 @@ def n_confirmado():
     flash('Favor confirmar a sua conta!', 'warning')
     return render_template('usuario/n_confirmado.html')
 
-
-@app.route("/login", methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    form = Login()
-    if form.validate_on_submit():
-        usuario = Usuario.query.filter_by(nome_usuario=form.nome_usuario.data).first()
-        if usuario and bcrypt.check_password_hash(usuario.senha, form.senha.data):
-            login_user(usuario, lembrar=form.lembrar.data)
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
-        else:
-            flash('Acesso mal sucedido. Por favor reveja usuario e senha', 'danger')
-    return render_template('login.html', title='Login', form=form)
-
 @app.route('/reenviar')
 @login_required
 def reenviar_confirmacao():
@@ -91,7 +99,11 @@ def reenviar_confirmacao():
     subject = 'Por favor, confirme o seu email'
     enviar_email(current_user.email, subject, html)
     flash('Um novo link de confirmação foi enviado via email.', 'success')
-    return redirect(url_for('n_confirmado'))
+    return redirect(url_for('n_confirmado'), title='Nao confirmado.')
+
+@app.route('/menu', methods=['GET'])
+def menu():
+    return render_template('main/menu.html', title='Menu')
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required

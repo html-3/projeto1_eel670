@@ -1,6 +1,6 @@
 from app import db
 
-class Documento(db.Model):
+class Doc(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     título = db.Column(db.String(150), nullable=False)
     # matéria (db.List código)
