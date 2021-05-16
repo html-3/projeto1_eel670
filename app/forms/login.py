@@ -1,13 +1,12 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, Optional
 
 class Login(FlaskForm):
-    dre = StringField('DRE', validators=[DataRequired(message="Insira seu DRE!"), 
-                                         Length(min=9, max=9, message="Insira apenas 9 digitos!")])
+    nome_usuario = StringField('Nome de usuário', validators=[DataRequired(message="Insira seu nome de usuário!"), 
+                                         Length(min=5, max=120, message="Nome muito longo/curto!")])
     
     senha = PasswordField('Senha', validators=[DataRequired(message="Insira sua senha!")])
     
-    lembrar = BooleanField('Lembrar de mim!')
+    lembrar = BooleanField('Lembrar de mim!',  validators=[Optional()])
     
-    submit = SubmitField('Entrar!')

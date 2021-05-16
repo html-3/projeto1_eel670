@@ -1,14 +1,14 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired, Length, URL, ValidationError
-from app.models.documento import Doc
+from wtforms import StringField
+from wtforms.validators import DataRequired, Length, URL, Optional, ValidationError
+from app.models.db import Doc
 
 class CadastroDocs(FlaskForm):
     titulo = StringField('Título', validators=[
                         DataRequired(message="Insira um titulo."), 
                         Length(min=3, max=150, message="Insira um titulo menor.")])
     autor = StringField('Autor', validators=[
-                        Length(min=3, max=120, message="Insira um nome de autor menor.")])
+                        Length(min=3, max=120, message="Insira um nome de autor menor."), Optional()])
     
     tipo = StringField('Tipo', validators=[
                         DataRequired(message="Insira um titulo."), 
@@ -21,9 +21,6 @@ class CadastroDocs(FlaskForm):
     link = StringField('Link', validators=[
                         DataRequired(message="Insira um link."), 
                         URL(message="Insira um link válido.")])
-
-
-    submit = SubmitField('Confirmar!')
 
     #def validate_doc(self, link):
     #    existe = Doc.query.filter_by(link=link.data).first()

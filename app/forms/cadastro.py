@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, IntegerField
+from wtforms import StringField, PasswordField, IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from app.models.discente import Usuario
+from app.models.db import Usuario, Dados
 
 class CadastroDiscente(FlaskForm):
     dre = StringField('DRE', validators=[
@@ -35,7 +35,6 @@ class CadastroDiscente(FlaskForm):
                         DataRequired(message="Insira sua senha denovo!"), 
                         EqualTo('senha', message="Suas senhas nao sao iguais!")])
 
-    submit = SubmitField('Confirmar!')
 
     # confirma se já existe na db ou nao
     # def validate_nome(self,nome_usuario):
@@ -43,6 +42,11 @@ class CadastroDiscente(FlaskForm):
     #    if existe:
     #        raise ValidationError("Escolha outro nome de usuario!")
     # 
+    # def validate_dre(self,dre):
+    #    existe = Dados.query.filter_by(dre=dre.data).first()
+    #    if existe:
+    #        raise ValidationError("Já existe uma conta com esse DRE.")
+    #
     # def validate_email(self,email):
     #    existe = Usuario.query.filter_by(email=email.data).first()
     #    if existe:

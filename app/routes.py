@@ -9,9 +9,9 @@ from app.decoradores import check_confirmed
 from app.forms.cadastro import CadastroDiscente
 from app.forms.docs import CadastroDocs
 from app.forms.login import Login
-from app.models.discente import Usuario, Dados
+from app.models.db import Usuario, Dados, Doc
 from app.models.docente import Docente
-from app.models.documento import Doc
+
 
 @app.route("/", methods = ["GET"])
 @app.route("/home")
@@ -26,7 +26,7 @@ def login():
     if form.validate_on_submit():
         usuario = Usuario.query.filter_by(nome_usuario=form.nome_usuario.data).first()
         if usuario and bcrypt.check_password_hash(usuario.senha, form.senha.data):
-            login_user(usuario, lembrar=form.lembrar.data)
+            login_user(usuario, remember=form.lembrar.data)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
@@ -44,28 +44,31 @@ def cadastro():
                         nome_usuario=form.nome_usuario.data, 
                         senha=hashed_senha, 
                         email=form.email.data)
+        
+        db.session.add(usuario)
+        db.session.commit()
+
+        # parte do email foi comentada por erros desconhecidos
+        token = gerar_token(usuario.email)
+        confirmar_url = url_for('confirmar_email', token=token, _external=True)
+        html = render_template('usuario/email.html', confirmar_url=confirmar_url)
+        subject = 'Por favor, confirme seu email.'
+        enviar_email(usuario.email, subject, html)
+
+        login_user(usuario)
+
         dados = Dados(
                         dre=form.dre.data, 
                         nome=form.nome.data, 
                         curso=form.curso.data,
                         periodo=form.periodo.data)
-        db.session.add(usuario)
         db.session.add(dados)
         db.session.commit()
 
-        # parte do email foi comentada por erros desconhecidos
-        # token = gerar_token(usuario.email)
-        # confirmar_url = url_for('confirmar_email', token=token, _external=True)
-        # html = render_template('usuario/email.html', confirmar_url=confirmar_url)
-        # subject = 'Por favor, confirme seu email.'
-        # enviar_email(usuario.email, subject, html)
-
-        login_user(usuario)
-
-        # flash('Um link de confirmação foi enviado via email.', 'success')
-        # return redirect(url_for('n_confirmado'))
-        flash('Usuário cadastrado com sucesso!', 'success')
-        return redirect(url_for('home'))
+        flash('Um link de confirmação foi enviado via email.', 'success')
+        return redirect(url_for('n_confirmado'))
+        #flash('Usuário cadastrado com sucesso!', 'success')
+        #return redirect(url_for('home'))
     return render_template('usuario/cadastro.html', title='Cadastro', form=form)   
 
 @app.route('/confirmar/<token>')
@@ -102,16 +105,16 @@ def reenviar_confirmacao():
     subject = 'Por favor, confirme o seu email'
     enviar_email(current_user.email, subject, html)
     flash('Um novo link de confirmação foi enviado via email.', 'success')
-    return redirect(url_for('n_confirmado'), title='Nao confirmado.')
+    return redirect(url_for('n_confirmado'))
 
 @app.route('/docs', methods=['GET'])
-#@login_required
+@login_required
 #@check_confirmed
 def docs():
     return render_template('main/docs.html', title='Menu')
 
 @app.route('/docs_cadastro', methods=['GET', 'POST'])
-#@login_required
+@login_required
 #@check_confirmed
 def cadastro_docs():
     form = CadastroDocs()

@@ -29,11 +29,27 @@
             <div class="collapse navbar-collapse" id="navbarToggle">
               <div class="navbar-nav mr-auto">
               </div>
-              <!-- Navbar Right Side -->
-              <div class="navbar-nav">
-                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
-                <a class="nav-item nav-link" href="{{ url_for('cadastro') }}">Cadastro</a>
+            {% if current_user.is_authenticated %}
+              <div class="collapse navbar-collapse" id="navbarToggle">
+                <div class="navbar-nav mr-auto">
+                  <a class="nav-item nav-link" href="{{ url_for('docs') }}">Documentos</a>
+                  {% if current_user.admin %}
+                  <a class="nav-item nav-link" href="{{ url_for('cadastro_docs') }}">Cadastro de documetos</a>
+                  {% endif %}
+                </div>
+                <!-- Navbar Right Side -->
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    </div>
+                </div>
+            {% endif %}
+            {% if not current_user.is_authenticated %}
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
+                    <a class="nav-item nav-link" href="{{ url_for('cadastro') }}">Cadastro</a>
+                </div>
               </div>
+            {% endif %}
             </div>
           </div>
         </nav>

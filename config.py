@@ -6,7 +6,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class BaseConfig(object):
     # Configuração principal
     SECRET_KEY = os.environ.get('SECRET_KEY')  or 'escolher uma chave'
-    SECURITY_PASSORD_SALT = 'bomsabadopvctbm'
+    SECURITY_PASSWORD_SALT = 'bomsabadopvctbm'
     WTF_CSRF_SECRET_KEY = 'pq'
     DEBUG = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -18,15 +18,14 @@ class BaseConfig(object):
     MAIL_USE_SSL = True
 
     # Autenticação Gmail
-    MAIL_USERNAME = os.environ.get('APP_MAIL_USERNAME')
-    MAIL_PASSWORD = os.environ.get('APP_MAIL_PASSWORD')
+    MAIL_USERNAME = 'projetoprovas@gmail.com'
+    MAIL_PASSWORD = 'lingprog'
     
     # Conta email
-    MAIL_DEFAULT_SENDER = 'email@gmail.com' # Mudar pelo nome do email
+    MAIL_DEFAULT_SENDER = 'projetoprovas@gmail.com' # Mudar pelo nome do email
 
 
 class DevelopmentConfig(BaseConfig):
-    # DEBUG = True
-    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///'+os.path.join(basedir,"app.db")
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///site.db'
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///'+os.path.join(basedir,"site.db")
+    
