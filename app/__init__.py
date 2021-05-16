@@ -1,10 +1,10 @@
 from flask import Flask
-from config import DevelopmentConfig
 from flask_sqlalchemy import SQLAlchemy
 # from flask_migrate import Migrate
 from flask_mail import Mail
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
+from config import DevelopmentConfig
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
@@ -15,4 +15,4 @@ mail = Mail(app)
 login_manager = LoginManager(app)
 bcrypt = Bcrypt(app)
 
-from app import routes, models
+from app import routes

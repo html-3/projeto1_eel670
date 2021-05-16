@@ -37,7 +37,6 @@ def cadastro():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = CadastroDiscente()
-    # cadastro nao é confirmado corretamente, nao envia erro, nao sabemos qual é o problema
     if form.validate_on_submit():
         hashed_senha = bcrypt.generate_password_hash(form.senha.data).decode('utf-8')
         usuario = Usuario(
@@ -47,22 +46,25 @@ def cadastro():
         dados = Dados(
                         dre=form.dre.data, 
                         nome=form.nome.data, 
-                        curso= form.curso.data,
-                        periodo= form.periodo.data)
+                        curso=form.curso.data,
+                        periodo=form.periodo.data)
         db.session.add(usuario)
         db.session.add(dados)
         db.session.commit()
 
-        token = gerar_token(usuario.email)
-        confirmar_url = url_for('confirmar_email', token=token, _external=True)
-        html = render_template('usuario/email.html', confirmar_url=confirmar_url)
-        subject = 'Por favor, confirme seu email.'
-        enviar_email(usuario.email, subject, html)
+        # parte do email foi comentada por erros desconhecidos
+        # token = gerar_token(usuario.email)
+        # confirmar_url = url_for('confirmar_email', token=token, _external=True)
+        # html = render_template('usuario/email.html', confirmar_url=confirmar_url)
+        # subject = 'Por favor, confirme seu email.'
+        # enviar_email(usuario.email, subject, html)
 
         login_user(usuario)
 
-        flash('Um link de confirmação foi enviado via email.', 'success')
-        return redirect(url_for('n_confirmado'))
+        # flash('Um link de confirmação foi enviado via email.', 'success')
+        # return redirect(url_for('n_confirmado'))
+        flash('Usuário cadastrado com sucesso!', 'success')
+        return redirect(url_for('home'))
     return render_template('usuario/cadastro.html', title='Cadastro', form=form)   
 
 @app.route('/confirmar/<token>')
