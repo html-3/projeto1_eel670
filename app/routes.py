@@ -48,7 +48,6 @@ def cadastro():
         db.session.add(usuario)
         db.session.commit()
 
-        # parte do email foi comentada por erros desconhecidos
         token = gerar_token(usuario.email)
         confirmar_url = url_for('confirmar_email', token=token, _external=True)
         html = render_template('usuario/email.html', confirmar_url=confirmar_url)
@@ -67,8 +66,6 @@ def cadastro():
 
         flash('Um link de confirmação foi enviado via email.', 'success')
         return redirect(url_for('n_confirmado'))
-        #flash('Usuário cadastrado com sucesso!', 'success')
-        #return redirect(url_for('home'))
     return render_template('usuario/cadastro.html', title='Cadastro', form=form)   
 
 @app.route('/confirmar/<token>')
@@ -109,13 +106,13 @@ def reenviar_confirmacao():
 
 @app.route('/docs', methods=['GET'])
 @login_required
-#@check_confirmed
+@check_confirmed
 def docs():
     return render_template('main/docs.html', title='Menu')
 
 @app.route('/docs_cadastro', methods=['GET', 'POST'])
 @login_required
-#@check_confirmed
+@check_confirmed
 def cadastro_docs():
     form = CadastroDocs()
     if form.validate_on_submit():
@@ -135,7 +132,7 @@ def cadastro_docs():
 
 @app.route('/profile')
 @login_required
-#@check_confirmed
+@check_confirmed
 def profile():
     pass
 
