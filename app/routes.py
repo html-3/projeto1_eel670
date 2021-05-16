@@ -7,6 +7,7 @@ from app.token import gerar_token, confirmar_token
 from app.email import enviar_email
 from app.decoradores import check_confirmed
 from app.forms.cadastro import CadastroDiscente
+from app.forms.docs import CadastroDocs
 from app.forms.login import Login
 from app.models.discente import Usuario, Dados
 from app.models.docente import Docente
@@ -103,13 +104,35 @@ def reenviar_confirmacao():
     flash('Um novo link de confirmação foi enviado via email.', 'success')
     return redirect(url_for('n_confirmado'), title='Nao confirmado.')
 
-@app.route('/menu', methods=['GET'])
-def menu():
-    return render_template('main/menu.html', title='Menu')
+@app.route('/docs', methods=['GET'])
+#@login_required
+#@check_confirmed
+def docs():
+    return render_template('main/docs.html', title='Menu')
 
-@app.route('/profile', methods=['GET', 'POST'])
+@app.route('/docs_cadastro', methods=['GET', 'POST'])
+#@login_required
+#@check_confirmed
+def cadastro_docs():
+    form = CadastroDocs()
+    if form.validate_on_submit():
+        doc = Doc(
+                        titulo=form.titulo.data, 
+                        autor=form.autor.data,
+                        tipo=form.tipo.data, 
+                        formato=form.formato.data,  
+                        link=form.link.data)
+
+        db.session.add(doc)
+        db.session.commit()
+
+        flash('Documento cadastrado com sucesso!', 'success')
+        return redirect(url_for('home'))
+    return render_template('main/docs_cadastro.html', title='Cadastro de documentos', form=form) 
+
+@app.route('/profile')
 @login_required
-@check_confirmed
+#@check_confirmed
 def profile():
     pass
 

@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, IntegerField
-from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from app.models.discente import Usuario
 
 class CadastroDiscente(FlaskForm):
     dre = StringField('DRE', validators=[
@@ -37,12 +38,12 @@ class CadastroDiscente(FlaskForm):
     submit = SubmitField('Confirmar!')
 
     # confirma se já existe na db ou nao
-    # def validate_nome(self,nome):
-    #    existe = Usuario.query.filter_by(nome=nome.data).first()
+    # def validate_nome(self,nome_usuario):
+    #    existe = Usuario.query.filter_by(nome_usuario=nome_usuario.data).first()
     #    if existe:
-    #        raise ValidationError("Escolha outro nome!")
+    #        raise ValidationError("Escolha outro nome de usuario!")
     # 
     # def validate_email(self,email):
     #    existe = Usuario.query.filter_by(email=email.data).first()
     #    if existe:
-    #        raise ValidationError("Escolha outro email!")
+    #        raise ValidationError("Já existe uma conta com esse email.")
