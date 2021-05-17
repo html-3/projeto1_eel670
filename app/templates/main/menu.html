@@ -3,7 +3,8 @@
 {% block content %}
 
 <h1>Menu dos Documentos</h1>
-<p class='text-muted'>Escolha o documento que você deseja acessar!</p>
+<div role="main" class="content-section">
+    <legend class="border-bottom mb-4">Escolha o documento que você deseja acessar!</legend>
     <ul class="list-group">
     {% for doc in docs %}
     
@@ -17,5 +18,5 @@
 
     {% endfor %}
     </ul>
-    
+</div>
 {% endblock %}

@@ -3,7 +3,7 @@ from wtforms import StringField
 from wtforms.validators import DataRequired, Length, URL, Optional, ValidationError
 from app.models.db import Doc
 
-class CadastroDocs(FlaskForm):
+class AdicionarDoc(FlaskForm):
     titulo = StringField('Título', validators=[
                         DataRequired(message="Insira um titulo."), 
                         Length(min=3, max=150, message="Insira um titulo menor.")])
@@ -22,7 +22,7 @@ class CadastroDocs(FlaskForm):
                         DataRequired(message="Insira um link."), 
                         URL(message="Insira um link válido.")])
 
-    #def validate_doc(self, link):
-    #    existe = Doc.query.filter_by(link=link.data).first()
-    #    if existe:
-    #        raise ValidationError("Este documento já existe.")
+    def validate_doc(self, titulo):
+        existe = Doc.query.filter_by(titulo=titulo.data).first()
+        if existe:
+            raise ValidationError("Este documento já existe!")

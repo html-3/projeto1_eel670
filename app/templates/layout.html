@@ -16,11 +16,19 @@
     {% else %}
         <title>Clonador de Cartao v2.0</title>
     {% endif %}
+    <style>
+        body{
+            background-color: #cfeedc;
+        }
+        .navbar-custom {
+            background-color: #89c79e;
+            }
+    </style>
 </head>
 <body>
     <!-- Navbar com Home, About, Login e Sign Up -->
     <header class="site-header">
-        <nav class="navbar navbar-expand-md navbar-light bg-steel fixed-top">
+        <nav class="navbar navbar-custom navbar-expand-md navbar-light fixed-top">
           <div class="container">
             <a class="navbar-brand mr-4" href="{{ url_for('home') }}">Clona Cartao v2.0</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,7 +42,7 @@
                 <div class="navbar-nav mr-auto">
                   <a class="nav-item nav-link" href="{{ url_for('menu') }}">Documentos</a>
                   {% if current_user.admin %}
-                  <a class="nav-item nav-link" href="{{ url_for('cadastro_docs') }}">Cadastro de documetos</a>
+                  <a class="nav-item nav-link" href="{{ url_for('adicionar_doc') }}">Adicionar Documeto</a>
                   {% endif %}
                 </div>
                 <!-- Navbar Right Side -->

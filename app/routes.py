@@ -7,7 +7,7 @@ from app.token import gerar_token, confirmar_token
 from app.email import enviar_email
 from app.decoradores import check_confirmed
 from app.forms.cadastro import CadastroDiscente
-from app.forms.docs import CadastroDocs
+from app.forms.docs import AdicionarDoc
 from app.forms.login import Login
 from app.models.db import Usuario, Dados, Doc
 from app.models.docente import Docente
@@ -108,17 +108,16 @@ def reenviar_confirmacao():
 
 @app.route('/menu', methods=['GET'])
 @login_required
-# meio desnecessário né?
-# @check_confirmed
+@check_confirmed
 def menu():
     docs = Doc.query.all()
     return render_template('main/menu.html', title='Menu', docs=docs)
 
 @app.route('/docs_cadastro', methods=['GET', 'POST'])
 @login_required
-# @check_confirmed
-def cadastro_docs():
-    form = CadastroDocs()
+@check_confirmed
+def adicionar_doc():
+    form = AdicionarDoc()
     if form.validate_on_submit():
         doc = Doc(
                         titulo=form.titulo.data, 
@@ -132,12 +131,12 @@ def cadastro_docs():
 
         flash('Documento cadastrado com sucesso!', 'success')
         return redirect(url_for('home'))
-    return render_template('main/docs_cadastro.html', title='Cadastro de documentos', form=form) 
+    return render_template('main/adicionar_doc.html', title='Cadastro de documentos', form=form) 
 
-@app.route('/profile')
+@app.route('/conta')
 @login_required
 @check_confirmed
-def profile():
+def conta():
     pass
 
 @app.route("/logout")
