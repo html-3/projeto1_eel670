@@ -110,10 +110,14 @@ def reenviar_confirmacao():
 @login_required
 @check_confirmed
 def menu():
-    docs = Doc.query.all()
+    # quantidade de documentos a ser mostrado no site
+    # incluir forma de iterar sobre os diferentes blocos
+    # descobrir como fzr slicing da database
+    quantidade = 10
+    docs = Doc.query.limit(quantidade).all()
     return render_template('main/menu.html', title='Menu', docs=docs)
 
-@app.route('/docs_cadastro', methods=['GET', 'POST'])
+@app.route('/docs_adicionar', methods=['GET', 'POST'])
 @login_required
 @check_confirmed
 def adicionar_doc():
@@ -138,6 +142,16 @@ def adicionar_doc():
 @check_confirmed
 def conta():
     pass
+
+@app.route('/docs_edicao', methods=['GET','POST'])
+@login_required
+@check_confirmed
+def editar_doc():
+    pass
+
+#@app.route('/documento_<doc>')
+#def documento(doc=):
+#    pass
 
 @app.route("/logout")
 def logout():
