@@ -1,5 +1,5 @@
 from enum import unique
-from app import db, login_manager
+from app import db, login_manager, bcrypt
 from flask_login import UserMixin
 
 @login_manager.user_loader
@@ -16,6 +16,7 @@ class Usuario(db.Model, UserMixin):
     email = db.Column(db.String(50), unique=True, nullable=False)
     confirmado =  db.Column(db.Boolean, nullable=False, default=False)
     admin =  db.Column(db.Boolean, default=False)
+
     dados = db.relationship('Dados', backref='usuario', uselist=False, lazy=True)
 
     def is_authenticated(self):
@@ -64,4 +65,45 @@ class Doc(db.Model):
 
 
 db.create_all()
+# data temporária
+# tirar bcrypt dps
+# manter db.session.commit()
+if not Usuario.query.filter_by(nome_usuario="admin").first():
+    db.session.add(Usuario(
+        nome_usuario="tomas2",
+        senha= bcrypt.generate_password_hash("123").decode('utf-8'),
+        email="tomas@poli.ufrj.br",
+        confirmado=True))
+    db.session.add(Dados(
+        dre=120011111,
+        nome="Tomas Tutor",
+        curso="Engenharia",
+        periodo="4"))
+
+    db.session.add(Usuario(
+        nome_usuario="admin",
+        senha= bcrypt.generate_password_hash("123").decode('utf-8'),
+        email="admin@poli.ufrj.br",
+        confirmado=True,
+        admin=True))
+    db.session.add(Dados(
+        dre=000000000,
+        nome="Administracao",
+        curso="Administracao",
+        periodo="0"))
+
+if not Doc.query.filter_by(titulo="Prova 1 CL").first():
+    db.session.add(Doc(
+        titulo="Prova 1 CL",
+        autor="Diego Dutra",
+        tipo="Prova",
+        formato="pdf",
+        link="https://www.compasso.ufrj.br/disciplinas/eel280"))
+    db.session.add(Doc(
+        titulo="Prova 1 Cálculo II",
+        autor="Departamento de Matemática",
+        tipo="Prova",
+        formato="pdf",
+        link="https://arquimedes.nce.ufrj.br/calculo2/"))
+    
 db.session.commit()

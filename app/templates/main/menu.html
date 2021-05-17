@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h1>Menu dos Documentos</h1>
+<p class='text-muted'>Escolha o documento que você deseja acessar!</p>
+    <ul class="list-group">
+    {% for doc in docs %}
+    
+    <li class="list-group-item list-group-item-light d-flex justify-content-between">
+        <div>
+        {{ doc.titulo }} - 
+        <i> {{ doc.autor }} </i> 
+        </div>
+        <a class="text-right" href="{{ doc.link }}">Acesso</a>
+    </li>
+
+    {% endfor %}
+    </ul>
+    
+{% endblock %}

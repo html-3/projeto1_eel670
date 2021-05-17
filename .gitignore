@@ -1,4 +1,4 @@
-app/app.db
+site/app.db
 app/__pycache__
 app/models/__pycache__
 app/forms/__pycache__

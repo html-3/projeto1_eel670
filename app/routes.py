@@ -64,7 +64,7 @@ def cadastro():
         db.session.add(dados)
         db.session.commit()
 
-        flash('Um link de confirmação foi enviado via email.', 'success')
+        flash('Um link de confirmação foi enviado via email.', 'warning')
         return redirect(url_for('n_confirmado'))
     return render_template('usuario/cadastro.html', title='Cadastro', form=form)   
 
@@ -101,18 +101,22 @@ def reenviar_confirmacao():
     html = render_template('usuario/email.html', confirmar_url=confirmar_url)
     subject = 'Por favor, confirme o seu email'
     enviar_email(current_user.email, subject, html)
+
     flash('Um novo link de confirmação foi enviado via email.', 'success')
+
     return redirect(url_for('n_confirmado'))
 
-@app.route('/docs', methods=['GET'])
+@app.route('/menu', methods=['GET'])
 @login_required
-@check_confirmed
-def docs():
-    return render_template('main/docs.html', title='Menu')
+# meio desnecessário né?
+# @check_confirmed
+def menu():
+    docs = Doc.query.all()
+    return render_template('main/menu.html', title='Menu', docs=docs)
 
 @app.route('/docs_cadastro', methods=['GET', 'POST'])
 @login_required
-@check_confirmed
+# @check_confirmed
 def cadastro_docs():
     form = CadastroDocs()
     if form.validate_on_submit():

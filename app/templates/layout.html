@@ -32,7 +32,7 @@
             {% if current_user.is_authenticated %}
               <div class="collapse navbar-collapse" id="navbarToggle">
                 <div class="navbar-nav mr-auto">
-                  <a class="nav-item nav-link" href="{{ url_for('docs') }}">Documentos</a>
+                  <a class="nav-item nav-link" href="{{ url_for('menu') }}">Documentos</a>
                   {% if current_user.admin %}
                   <a class="nav-item nav-link" href="{{ url_for('cadastro_docs') }}">Cadastro de documetos</a>
                   {% endif %}
