@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>{{ title }} - Edição</h1>
+<div class="content-section">
+    <form method="POST" action="">
+        <!-- CSRF Token -->
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Edite o documento!</legend>
+            <div class="form-group">
+                {{ form.titulo.label(class="form-control-label") }}
+                {% if form.titulo.errors %}
+                    {{ form.titulo(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.titulo.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.titulo(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.autor.label(class="form-control-label") }}
+                {% if form.autor.errors %}
+                    {{ form.autor(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.autor.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.autor(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.tipo.label(class="form-control-label") }}
+                {% if form.tipo.errors %}
+                    {{ form.tipo(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.tipo.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.tipo(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.formato.label(class="form-control-label") }}
+                {% if form.formato.errors %}
+                    {{ form.formato(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.formato.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.formato(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.link.label(class="form-control-label") }}
+                {% if form.link.errors %}
+                    {{ form.link(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.link.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.link(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <button type="submit" class="btn btn-default"> Confirmar </button>
+    </form>
+    </div>
+
+{% endblock content %}

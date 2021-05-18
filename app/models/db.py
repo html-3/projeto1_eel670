@@ -65,6 +65,8 @@ class Doc(db.Model):
 
 
 db.create_all()
+# assegura q a base de dados seja criada com sucesso
+db.session.commit()
 # data temporária
 # tirar bcrypt dps
 # manter db.session.commit()

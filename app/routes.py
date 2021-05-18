@@ -106,17 +106,16 @@ def reenviar_confirmacao():
 
     return redirect(url_for('n_confirmado'))
 
-@app.route('/menu', methods=['GET'])
+@app.route('/documento', methods=['GET','POST'])
 @login_required
 @check_confirmed
-def menu():
-    docs = Doc.query.all()
-    return render_template('main/menu.html', title='Menu', docs=docs)
+def documento():
+    # quantidade de documentos a ser mostrado no site
+    # incluir forma de iterar sobre os diferentes blocos
+    # descobrir como fzr slicing da database
+    quantidade = 10
+    docs = Doc.query.limit(quantidade).all()
 
-@app.route('/docs_cadastro', methods=['GET', 'POST'])
-@login_required
-@check_confirmed
-def adicionar_doc():
     form = AdicionarDoc()
     if form.validate_on_submit():
         doc = Doc(
@@ -125,20 +124,93 @@ def adicionar_doc():
                         tipo=form.tipo.data, 
                         formato=form.formato.data,  
                         link=form.link.data)
-
         db.session.add(doc)
         db.session.commit()
 
         flash('Documento cadastrado com sucesso!', 'success')
-        return redirect(url_for('home'))
-    return render_template('main/adicionar_doc.html', title='Cadastro de documentos', form=form) 
+        return redirect(url_for('documento'))
+    return render_template('main/documento.html', title='Documentos', docs=docs, form=form)
 
-@app.route('/conta')
+@app.route('/documento/<int:documento_id>', methods=['GET','POST'])
 @login_required
 @check_confirmed
-def conta():
-    pass
+def documento_esp(documento_id):
+    doc = Doc.query.get_or_404(documento_id)
+    return render_template('main/documento_esp.html', title="Documento", doc=doc)
 
+@app.route('/documento/<int:documento_id>/editar', methods=['GET','POST'])
+@login_required
+@check_confirmed
+def editar_documento(documento_id):
+    doc = Doc.query.get_or_404(documento_id)
+
+    if not current_user.admin:
+        redirect(url_for('documento'))
+
+    form = AdicionarDoc()
+    if form.validate_on_submit():
+        doc.titulo = form.titulo.data
+        doc.autor = form.autor.data
+        doc.tipo = form.tipo.data
+        doc.formato = form.formato.data
+        doc.link = form.link.data
+        db.session.commit()
+        flash('Documento atualizado!', 'success')
+        return redirect(url_for('documento', post_id=doc.id))
+
+    elif request.method == 'GET':
+        form.titulo.data = doc.titulo
+        form.autor.data = doc.autor
+        form.tipo.data = doc.tipo
+        form.formato.data = doc.formato
+        form.link.data = doc.link
+    return render_template('main/editar_documento.html', title="Documento", form=form)
+
+@app.route('/editar_documento/<int:documento_id>/deletar', methods=['GET','POST'])
+@login_required
+@check_confirmed
+def deletar_documento(documento_id):
+    doc = Doc.query.get_or_404(documento_id)
+
+    if not current_user.admin:
+        redirect(url_for('documento'))
+
+    db.session.delete(doc)
+    db.session.commit()
+    flash('Documento deletado!', 'success')
+    return redirect(url_for('documento'))
+    
+# fácil de fazer, mas sem tempo irmao
+""" @app.route('/conta/<str:nome_usuario>')
+@login_required
+@check_confirmed
+def conta(nome_usuario):
+    usuario = Doc.query.get_or_404(nome_usuario)
+
+    if not current_user.admin:
+        redirect(url_for('documento'))
+
+    form = AdicionarDoc()
+    if form.validate_on_submit():
+        doc.titulo = form.titulo.data
+        doc.autor = form.autor.data
+        doc.tipo = form.tipo.data
+        doc.formato = form.formato.data
+        doc.link = form.link.data
+        db.session.commit()
+        flash('Documento atualizado!', 'success')
+        return redirect(url_for('documento', post_id=doc.id))
+
+    elif request.method == 'GET':
+        form.titulo.data = doc.titulo
+        form.autor.data = doc.autor
+        form.tipo.data = doc.tipo
+        form.formato.data = doc.formato
+        form.link.data = doc.link
+    return render_template('main/editar_documento.html', title="Documento", form=form) """
+# <a class="nav-item nav-link" href="{{ url_for('conta') }}">Conta</a> 
+# ao parecer comentários dentro do html causam problemas quando contem código do python
+# isto pertence ao layout na parte {% if user_is_authenticated %}
 @app.route("/logout")
 def logout():
     logout_user()
