@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h1>{{ title }}</h1>
+<h1>{{ title }} - Edição</h1>
 <div class="content-section">
     <form method="POST" action="">
         <!-- CSRF Token -->
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Adicione um documento!</legend>
+            <legend class="border-bottom mb-4">Edite o documento!</legend>
             <div class="form-group">
                 {{ form.titulo.label(class="form-control-label") }}
                 {% if form.titulo.errors %}

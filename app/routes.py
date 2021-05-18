@@ -208,7 +208,9 @@ def conta(nome_usuario):
         form.formato.data = doc.formato
         form.link.data = doc.link
     return render_template('main/editar_documento.html', title="Documento", form=form) """
-
+# <a class="nav-item nav-link" href="{{ url_for('conta') }}">Conta</a> 
+# ao parecer comentários dentro do html causam problemas quando contem código do python
+# isto pertence ao layout na parte {% if user_is_authenticated %}
 @app.route("/logout")
 def logout():
     logout_user()
