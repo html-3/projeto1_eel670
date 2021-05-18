@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+
+{% block content %}
+{% if current_user.admin %}
+    <h1>{{ title }} - Moderação</h1>    
+{% else %}
+    <h1>{{ title }}</h1>
+{% endif %}
+<div role="main" class="content-section">
+    <legend class="border-bottom mb-4">Escolha o documento que você deseja acessar!</legend>
+    <ul class="list-group">
+    {% for doc in docs %}
+    
+    <li class="list-group-item list-group-item-light d-flex justify-content-between">
+        <div>
+        {{ doc.titulo }} - 
+        <i> {{ doc.autor }} </i> 
+        </div>
+        <div>
+            <a class="text-right" href="{{ doc.link }}">Download</a> -   
+            <a class="text-right" href="{{ url_for('documento_esp', documento_id=doc.id) }}">Acessar</a>
+        </div>
+        
+    </li>
+    {% endfor %}
+    </ul>
+    
+</div>
+<div class="content-section">
+    <form method="POST" action="">
+        <!-- CSRF Token -->
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Adicione um documento!</legend>
+            <div class="form-group">
+                {{ form.titulo.label(class="form-control-label") }}
+                {% if form.titulo.errors %}
+                    {{ form.titulo(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.titulo.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.titulo(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.autor.label(class="form-control-label") }}
+                {% if form.autor.errors %}
+                    {{ form.autor(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.autor.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.autor(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.tipo.label(class="form-control-label") }}
+                {% if form.tipo.errors %}
+                    {{ form.tipo(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.tipo.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.tipo(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.formato.label(class="form-control-label") }}
+                {% if form.formato.errors %}
+                    {{ form.formato(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.formato.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.formato(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.link.label(class="form-control-label") }}
+                {% if form.link.errors %}
+                    {{ form.link(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.link.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.link(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <button type="submit" class="btn btn-default"> Confirmar </button>
+    </form>
+</div>
+{% endblock %}
