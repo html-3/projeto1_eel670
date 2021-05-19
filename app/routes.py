@@ -129,7 +129,7 @@ def documento():
 
         flash('Documento cadastrado com sucesso!', 'success')
         return redirect(url_for('documento'))
-    return render_template('documento.html', title='Documentos', docs=docs, form=form)
+    return render_template('documento/documento.html', title='Documentos', docs=docs, form=form)
 
 @app.route('/documento/<int:documento_id>', methods=['GET','POST'])
 @login_required
