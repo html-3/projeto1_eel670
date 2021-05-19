@@ -16,7 +16,7 @@ from app.models.docente import Docente
 @app.route("/", methods = ["GET"])
 @app.route("/home")
 def home():
-    return render_template('main/home.html', title='Home')
+    return render_template('home.html', title='Home')
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -129,14 +129,14 @@ def documento():
 
         flash('Documento cadastrado com sucesso!', 'success')
         return redirect(url_for('documento'))
-    return render_template('main/documento.html', title='Documentos', docs=docs, form=form)
+    return render_template('documento.html', title='Documentos', docs=docs, form=form)
 
 @app.route('/documento/<int:documento_id>', methods=['GET','POST'])
 @login_required
 @check_confirmed
 def documento_esp(documento_id):
     doc = Doc.query.get_or_404(documento_id)
-    return render_template('main/documento_esp.html', title="Documento", doc=doc)
+    return render_template('documento/documento_esp.html', title="Documento", doc=doc)
 
 @app.route('/documento/<int:documento_id>/editar', methods=['GET','POST'])
 @login_required
@@ -164,7 +164,7 @@ def editar_documento(documento_id):
         form.tipo.data = doc.tipo
         form.formato.data = doc.formato
         form.link.data = doc.link
-    return render_template('main/editar_documento.html', title="Documento", form=form)
+    return render_template('documento/editar_documento.html', title="Documento", form=form)
 
 @app.route('/editar_documento/<int:documento_id>/deletar', methods=['GET','POST'])
 @login_required
