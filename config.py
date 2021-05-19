@@ -24,7 +24,6 @@ class BaseConfig(object):
     # Conta email
     MAIL_DEFAULT_SENDER = 'projetoprovas@gmail.com' # Mudar pelo nome do email
 
-
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///'+os.path.join(basedir,"site.db")

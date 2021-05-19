@@ -107,5 +107,6 @@ if not Doc.query.filter_by(titulo="Prova 1 CL").first():
         tipo="Prova",
         formato="pdf",
         link="https://arquimedes.nce.ufrj.br/calculo2/"))
+
     
 db.session.commit()
