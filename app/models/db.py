@@ -1,4 +1,3 @@
-from enum import unique
 from app import db, login_manager, bcrypt
 from flask_login import UserMixin
 
@@ -17,25 +16,14 @@ class Usuario(db.Model, UserMixin):
     confirmado =  db.Column(db.Boolean, nullable=False, default=False)
     admin =  db.Column(db.Boolean, default=False)
 
-    dados = db.relationship('Dados', backref='usuario', uselist=False, lazy=True)
-
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        return self.id
+    dados = db.relationship('Dados', backref='usuario_dre', lazy=True)
 
     def repr(self):
         return f"{self.id} - '{self.nome_usuario}. Email: {self.email}'"
 
 class Dados(db.Model):
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
+    
     dre = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
     nome = db.Column(db.String(100), nullable=False)
     curso = db.Column(db.String(50), nullable=False)
@@ -60,9 +48,31 @@ class Doc(db.Model):
     formato = db.Column(db.String(3), nullable=False)
     link = db.Column(db.String(150), nullable=False)
 
+    comentarios = db.relationship('ComentarioDoc', backref='doc', lazy=True)
+
     def _repr_(self):
         return f"{self.id} - {self.título}.{self.formato} ({self.autor}):\n\tLink:{self.link})"
 
+class ComentarioDoc(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+
+    doc_id = db.Column(db.Integer, db.ForeignKey('doc.id'), nullable=False)
+
+class Docente(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    # Matrícula SIAPE não é obrigatória
+    siape = db.Column(db.Integer, default=1000000)
+    nome = db.Column(db.String(100), nullable=False)
+    # Email instucional, preferência por @poli.ufrj.br
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    dep = db.Column(db.String(100), nullable=False)
+    # Link do perfil UFRJ, também não é obrigatório
+    link_ufrj = db.Column(db.String(100))
+
+    def _repr_(self):
+        if self.siape == self.siape.default:
+            return f"{self.id} - {self.nome}, Email: {self.email}; Depart.: {self.dep}"
+        return f"{self.siape} - {self.nome}, Email: {self.email}; Depart.: {self.dep}"
 
 db.create_all()
 # assegura q a base de dados seja criada com sucesso
@@ -89,14 +99,14 @@ if not Usuario.query.filter_by(nome_usuario="admin").first():
         confirmado=True,
         admin=True))
     db.session.add(Dados(
-        dre=000000000,
+        dre=999999999,
         nome="Administracao",
         curso="Administracao",
         periodo="0"))
 
-if not Doc.query.filter_by(titulo="Prova 1 CL").first():
+if not Doc.query.filter_by(titulo="Prova 1 Ciruitos Lógicos").first():
     db.session.add(Doc(
-        titulo="Prova 1 CL",
+        titulo="Prova 1 Circuitos Lógicos",
         autor="Diego Dutra",
         tipo="Prova",
         formato="pdf",
@@ -108,5 +118,4 @@ if not Doc.query.filter_by(titulo="Prova 1 CL").first():
         formato="pdf",
         link="https://arquimedes.nce.ufrj.br/calculo2/"))
 
-    
 db.session.commit()
