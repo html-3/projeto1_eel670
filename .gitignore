@@ -1,5 +1,2 @@
 /site.db
-/__pycache__/
-/app/__pycache__/
-/app/models/__pycache__/
-/app/forms/__pycache__/
+__pycache__

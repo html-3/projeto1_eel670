@@ -9,13 +9,13 @@ from app.decoradores import check_confirmed
 from app.forms.cadastro import CadastroDiscente
 from app.forms.docs import AdicionarDoc
 from app.forms.login import Login
-from app.models.db import Usuario, Dados, Doc
-from app.models.docente import Docente
+from app.models.db import Usuario, Dados, Doc, Docente
 
 
 @app.route("/", methods = ["GET"])
 @app.route("/home")
 def home():
+    print(request.path)
     return render_template('home.html', title='Home')
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -113,8 +113,8 @@ def documento():
     # quantidade de documentos a ser mostrado no site
     # incluir forma de iterar sobre os diferentes blocos
     # descobrir como fzr slicing da database
-    quantidade = 10
-    docs = Doc.query.limit(quantidade).all()
+    page = request.args.get('page', 1, type=int)
+    docs = Doc.query.order_by(Doc.id).paginate(page=page, per_page=5)
 
     form = AdicionarDoc()
     if form.validate_on_submit():
@@ -129,7 +129,7 @@ def documento():
 
         flash('Documento cadastrado com sucesso!', 'success')
         return redirect(url_for('documento'))
-    return render_template('documento.html', title='Documentos', docs=docs, form=form)
+    return render_template('documento/documento.html', title='Documentos', docs=docs, form=form)
 
 @app.route('/documento/<int:documento_id>', methods=['GET','POST'])
 @login_required
@@ -180,6 +180,16 @@ def deletar_documento(documento_id):
     flash('Documento deletado!', 'success')
     return redirect(url_for('documento'))
     
+@app.route('/lista_usuarios', methods=['GET'])
+@login_required
+@check_confirmed
+def lista_usuarios():
+    page = request.args.get('page', 1, type=int)
+    usuarios = Usuario.query.order_by(Usuario.id).paginate(page=page, per_page=10)
+    quantidade = Usuario.query.count()
+
+    return render_template('usuario/lista_usuarios.html',title='Usuarios', usuarios=usuarios, quantidade=quantidade)
+
 # fácil de fazer, mas sem tempo irmao
 """ @app.route('/conta/<str:nome_usuario>')
 @login_required

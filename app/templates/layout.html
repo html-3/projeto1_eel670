@@ -18,11 +18,22 @@
         <title>polidoc</title>
     {% endif %}
     <style>
-        body{
+        body {
             background-color: #cfeedc;
         }
-        .navbar-custom {
+        .navbar-custom, .btn-info {
             background-color: #89c79e;
+            border-color: #89c79e;
+            }
+        .bg-g {
+            background-color: #89c79e;
+            }
+        *{
+            padding: 0px;
+            }
+        html{
+            height:100%;
+            overflow-x: hidden;
             }
     </style>
 </head>
@@ -46,7 +57,7 @@
                   <a class="nav-item nav-link" href="{{ url_for('documento') }}">Documentos</a>
                   
                   {% if current_user.admin %}
-                  <!-- lista de usuários -->
+                  <a class="nav-item nav-link" href="{{ url_for('lista_usuarios') }}">Usuarios</a>
                   <!-- outras funcoes -->
                   {% endif %}
                 </div>
@@ -55,11 +66,19 @@
                         <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
                     </div>
                 </div>
+            {% elif request.path == '/login' %}
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="{{ url_for('cadastro') }}">Cadastro</a>
+            </div>
+            {% elif request.path == '/cadastro' %}
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
+            </div>
             {% else %}
-                <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
-                    <a class="nav-item nav-link" href="{{ url_for('cadastro') }}">Cadastro</a>
-                </div>
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
+                <a class="nav-item nav-link" href="{{ url_for('cadastro') }}">Cadastro</a>
+            </div>
               </div>
             {% endif %}
             </div>
@@ -81,6 +100,7 @@
             {% endwith %}
             {% block content %}{% endblock %}
         </div>
+        {% if not current_user.admin %}
         <div class="col-md-4">
             <div class="content-section">
                 {% if current_user.is_authenticated %}
@@ -98,13 +118,22 @@
                 </p>
             </div>
             </div>
+        {% endif %}
     </div>
+    
     </main>
-
+    <br><br><br>
+    <footer class="text-center text-lg-start bg-g text-muted" styele="">
+        <a href="https://github.com/html-3/projeto1_eel670">
+        <img src="{{ url_for('static', filename='github-logo.png') }}" style="height: 35px; margin: 15px;">
+        </a>
+    </footer>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+    
 </body>
 </html>
