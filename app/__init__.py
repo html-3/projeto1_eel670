@@ -17,4 +17,10 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 bcrypt = Bcrypt(app)
 
-from app import routes
+from .main.routes import main
+from .usuarios.routes import usuarios
+from .documentos.routes import documentos
+
+app.register_blueprint(main)
+app.register_blueprint(usuarios)
+app.register_blueprint(documentos)

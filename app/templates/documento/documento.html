@@ -18,7 +18,7 @@
         </div>
         <div>
             <a class="text-right" href="{{ doc.link }}">Download</a> -   
-            <a class="text-right" href="{{ url_for('documento_esp', documento_id=doc.id) }}">Acessar</a>
+            <a class="text-right" href="{{ url_for('documentos.documento_esp', documento_id=doc.id) }}">Acessar</a>
         </div>
         
     </li>
@@ -29,9 +29,9 @@
         {% for page_num in docs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
           {% if page_num %}
             {% if docs.page == page_num %}
-              <a class="btn btn-info mb-4" href="{{ url_for('documento', page=page_num) }}">{{ page_num }}</a>
+              <a class="btn btn-info mb-4" href="{{ url_for('documentos.documento', page=page_num) }}">{{ page_num }}</a>
             {% else %}
-              <a class="btn btn-outline-info mb-4" href="{{ url_for('documento', page=page_num) }}">{{ page_num }}</a>
+              <a class="btn btn-outline-info mb-4" href="{{ url_for('documentos.documento', page=page_num) }}">{{ page_num }}</a>
             {% endif %}
           {% else %}
             &nbsp;&nbsp;&nbsp;

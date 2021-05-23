@@ -9,7 +9,7 @@ def check_confirmed(func):
     def decorated_function(*args, **kwargs):
         if current_user.confirmado is False:
             flash('Favor confirmar a sua conta!', 'warning')
-            return redirect(url_for('n_confirmado'))
+            return redirect(url_for('usuarios.n_confirmado'))
         return func(*args, **kwargs)
 
     return decorated_function
