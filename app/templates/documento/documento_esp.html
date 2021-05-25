@@ -4,27 +4,58 @@
 
 <h1>{{ title }} - {{ doc.titulo }}</h1>
 <div role="main" class="content-section">
-    <legend class="border-bottom mb-4">Escolha o documento que você deseja acessar!</legend>
-    <ul class="list-group">
-    
+<legend class="border-bottom mb-4">Escolha o documento que você deseja acessar!</legend>
+  <ul class="list-group">
+
     <li class="list-group-item list-group-item-light d-flex justify-content-between">
-        <div>
-        {{ doc.titulo }} - 
-        <i> {{ doc.autor }} </i> 
-        </div>
-        <div>   
-            <a class="text-right" href="{{ doc.link }}">Download</a>
-        </div>
-        
+      <div>
+      {{ doc.titulo }} - 
+      <i> {{ doc.autor }} </i> 
+      </div>
+      <div>   
+      <a class="text-right" href="{{ doc.link }}">Download</a>
+      </div>
+
     </li>
-    </ul>
-    <br>
-    {% if current_user.admin %}
-          <div>
-            <a class="btn btn-secondary" href="{{ url_for('documento.editar_documento', documento_id=doc.id) }}">Atualizar</a>
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Deletar</button>
+  </ul>
+<br>
+{% if current_user.admin %}
+<div>
+  <a class="btn btn-secondary" href="{{ url_for('documentos.editar_documento', documento_id=doc.id) }}">Atualizar</a>
+  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Deletar</button>
+</div>
+{% endif %}
+<legend class="border-bottom mb-4">Comentários</legend>
+{% for com in coms %}
+<div class="desc">
+  <h5>{{ com.nome_usuario}} - <i> {{ com.data.strftime('%D') }} </i> </h5>
+  
+  <p class="comment">{{ com.conteudo }}</p>
+</div>
+{% endfor %}
+<br>
+
+<form method="POST" action="">
+  <!-- CSRF Token -->
+  {{ form.hidden_tag() }}
+    <fieldset class="form-group">
+    <legend class="border-bottom mb-4">Comente!</legend>
+      <div class="form-group">
+        {{ form.conteudo.label(class="form-control-label") }}
+        {% if form.conteudo.errors %}
+        {{ form.conteudo(class="form-control form-control-lg is-invalid") }}
+          <div class="invalid-feedback">
+          {% for error in form.conteudo.errors %}
+          <span>{{ error }}</span>
+          {% endfor %}
           </div>
+        {% else %}
+        {{ form.conteudo(class="form-control form-control-lg") }}
         {% endif %}
+      </div>
+    </fieldset>
+  <button type="submit" class="btn btn-default"> Confirmar </button>
+</form>
 </div>
   <!-- Modal -->
   <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -38,11 +69,12 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <form action="{{ url_for('documento.deletar_documento', documento_id=doc.id) }}" method="POST">
+          <form action="{{ url_for('documentos.deletar_documento', documento_id=doc.id) }}" method="POST">
             <input class="btn btn-danger" type="submit" value="Delete">
           </form>
         </div>
       </div>
     </div>
   </div>
+
 {% endblock %}

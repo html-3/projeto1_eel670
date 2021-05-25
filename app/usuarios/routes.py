@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, Blueprint
 from app import db, bcrypt
-from time import datetime
+from datetime import datetime
 from flask_login import login_user, current_user, logout_user, login_required
 from app.token import gerar_token, confirmar_token
 from app.email import enviar_email

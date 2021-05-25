@@ -29,3 +29,8 @@ class AdicionarDoc(FlaskForm):
         if existe:
             raise ValidationError("Este documento já existe!")
 
+class AdicionarCom(FlaskForm):
+    conteudo = StringField('Comentário', validators=[
+                        Length(min=1, max=280, message="Escreva até 280 caractéres.")])
+    
+    submeter = SubmitField('Adicionar')

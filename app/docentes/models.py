@@ -11,7 +11,7 @@ class Docente(db.Model):
     # Link do perfil UFRJ, também não é obrigatório
     link_ufrj = db.Column(db.String(100))
 
-    def _repr_(self):
+    def __repr__(self):
         if self.siape == self.siape.default:
             return f"{self.id} - {self.nome}, Email: {self.email}; Depart.: {self.dep}"
         return f"{self.siape} - {self.nome}, Email: {self.email}; Depart.: {self.dep}"

@@ -3,8 +3,8 @@ from .models import Doc
 from app import db
 from flask_login import current_user, login_required
 from app.decoradores import check_confirmed
-from .models import Doc
-from .forms import AdicionarDoc
+from .models import Doc, ComentarioDoc
+from .forms import AdicionarDoc, AdicionarCom
 
 documentos = Blueprint('documentos', __name__)
 
@@ -30,7 +30,7 @@ def documento():
         db.session.commit()
 
         flash('Documento cadastrado com sucesso!', 'success')
-        return redirect(url_for('documento.documento'))
+        return redirect(url_for('documentos.documento'))
     return render_template('documento/documento.html', title='Documentos', docs=docs, form=form)
 
 @documentos.route('/documento/<int:documento_id>', methods=['GET','POST'])
@@ -38,7 +38,21 @@ def documento():
 @check_confirmed
 def documento_esp(documento_id):
     doc = Doc.query.get_or_404(documento_id)
-    return render_template('documento/documento_esp.html', title="Documento", doc=doc)
+
+    coms = ComentarioDoc.query.filter_by(doc_id=documento_id).all()
+    form = AdicionarCom()
+    if form.validate_on_submit():
+        com = ComentarioDoc(
+                        doc_id=doc.id, 
+                        conteudo=form.conteudo.data,
+                        nome_usuario=current_user.nome_usuario)
+        db.session.add(com)
+        db.session.commit()
+
+        flash('Comentário feito com sucesso!', 'success')
+        return redirect(url_for('documentos.documento_esp', documento_id=doc.id))
+    
+    return render_template('documento/documento_esp.html', title="Documento", doc=doc, form=form, coms=coms)
 
 @documentos.route('/documento/<int:documento_id>/editar', methods=['GET','POST'])
 @login_required
@@ -47,7 +61,7 @@ def editar_documento(documento_id):
     doc = Doc.query.get_or_404(documento_id)
 
     if not current_user.admin:
-        redirect(url_for('documento.documento'))
+        redirect(url_for('documentos.documento'))
 
     form = AdicionarDoc()
     if form.validate_on_submit():
@@ -58,7 +72,7 @@ def editar_documento(documento_id):
         doc.link = form.link.data
         db.session.commit()
         flash('Documento atualizado!', 'success')
-        return redirect(url_for('documento.documento', post_id=doc.id))
+        return redirect(url_for('documentos.documento', post_id=doc.id))
 
     elif request.method == 'GET':
         form.titulo.data = doc.titulo
@@ -75,10 +89,10 @@ def deletar_documento(documento_id):
     doc = Doc.query.get_or_404(documento_id)
 
     if not current_user.admin:
-        redirect(url_for('documento.documento'))
+        redirect(url_for('documentos.documento'))
 
     db.session.delete(doc)
     db.session.commit()
     flash('Documento deletado!', 'success')
-    return redirect(url_for('documento.documento'))
+    return redirect(url_for('documentos.documento'))
    
