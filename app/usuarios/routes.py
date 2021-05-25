@@ -2,9 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, Blueprint
 from app import db, bcrypt
 from datetime import datetime
 from flask_login import login_user, current_user, logout_user, login_required
-from app.token import gerar_token, confirmar_token
-from app.email import enviar_email
-from app.decoradores import check_confirmed
+from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed, login_check
 from .models import Usuario, Dados
 from .forms import Login, Cadastro
 
@@ -27,8 +25,6 @@ def login():
 
 @usuarios.route("/cadastro", methods = ["GET","POST"])
 def cadastro():
-    if current_user.is_authenticated:
-        return redirect(url_for('main.home'))
     form = Cadastro()
     if form.validate_on_submit():
         hashed_senha = bcrypt.generate_password_hash(form.senha.data).decode('utf-8')
@@ -49,21 +45,17 @@ def cadastro():
         login_user(usuario)
 
         dados = Dados(
-                        dre=form.dre.data, 
-                        nome=form.nome.data, 
-                        curso=form.curso.data,
-                        periodo=form.periodo.data)
+                    usuario_id=usuario.id,
+                    dre=form.dre.data, 
+                    nome=form.nome.data, 
+                    curso=form.curso.data,
+                    periodo=form.periodo.data)
         db.session.add(dados)
         db.session.commit()
 
         flash('Um link de confirmação foi enviado via email.', 'warning')
         return redirect(url_for('usuarios.n_confirmado'))
     return render_template('usuario/cadastro.html', title='Cadastro', form=form)   
-
-@usuarios.route("/logout")
-def logout():
-    logout_user()
-    return redirect(url_for('main.home'))
 
 @usuarios.route('/confirmar/<token>')
 @login_required
@@ -112,6 +104,11 @@ def lista_usuarios():
     quantidade = Usuario.query.count()
 
     return render_template('usuario/lista_usuarios.html',title='Usuarios', usuarios=usuarios, quantidade=quantidade)
+
+@usuarios.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('main.home'))
 
 # fácil de fazer, mas sem tempo irmao
 """ @app.route('/conta/<str:nome_usuario>')

@@ -25,13 +25,16 @@
   <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Deletar</button>
 </div>
 {% endif %}
+<br>
 <legend class="border-bottom mb-4">Comentários</legend>
 {% for com in coms %}
+<li class="list-group-item list-group-item-light d-flex justify-content-between">
 <div class="desc">
   <h5>{{ com.nome_usuario}} - <i> {{ com.data.strftime('%D') }} </i> </h5>
   
   <p class="comment">{{ com.conteudo }}</p>
 </div>
+</li>
 {% endfor %}
 <br>
 

@@ -1,8 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request, Blueprint
-from .models import Doc
 from app import db
 from flask_login import current_user, login_required
-from app.decoradores import check_confirmed
+from app.usuarios.utilidades import check_confirmed, login_check
 from .models import Doc, ComentarioDoc
 from .forms import AdicionarDoc, AdicionarCom
 
@@ -12,9 +11,6 @@ documentos = Blueprint('documentos', __name__)
 @login_required
 @check_confirmed
 def documento():
-    # quantidade de documentos a ser mostrado no site
-    # incluir forma de iterar sobre os diferentes blocos
-    # descobrir como fzr slicing da database
     page = request.args.get('page', 1, type=int)
     docs = Doc.query.order_by(Doc.id).paginate(page=page, per_page=5)
 

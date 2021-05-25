@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
-from wtforms.validators import DataRequired, Length, Optional, Email, EqualTo
+from wtforms.validators import DataRequired, Length, Optional, Email, EqualTo, ValidationError
+from .models import Usuario, Dados
     
     
 class Cadastro(FlaskForm):
@@ -39,20 +40,20 @@ class Cadastro(FlaskForm):
 
 
     # confirma se já existe na db ou nao
-    # def validate_nome(self,nome_usuario):
-    #    existe = Usuario.query.filter_by(nome_usuario=nome_usuario.data).first()
-    #    if existe:
-    #        raise ValidationError("Escolha outro nome de usuario!")
-    # 
-    # def validate_dre(self,dre):
-    #    existe = Dados.query.filter_by(dre=dre.data).first()
-    #    if existe:
-    #        raise ValidationError("Já existe uma conta com esse DRE.")
-    #
-    # def validate_email(self,email):
-    #    existe = Usuario.query.filter_by(email=email.data).first()
-    #    if existe:
-    #        raise ValidationError("Já existe uma conta com esse email.")
+    def validar_nome_usuario(self,nome_usuario):
+       existe = Usuario.query.filter_by(nome_usuario=nome_usuario.data).first()
+       if existe:
+           raise ValidationError("Escolha outro nome de usuario!")
+    
+    def validar_dre(self,dre):
+       existe = Dados.query.filter_by(dre=dre.data).first()
+       if existe:
+           raise ValidationError("Já existe uma conta com esse DRE.")
+
+    def validar_email(self,email):
+       existe = Usuario.query.filter_by(email=email.data).first()
+       if existe:
+          raise ValidationError("Já existe uma conta com esse email.")
 
 class Login(FlaskForm):
     nome_usuario = StringField('Nome de usuário', validators=[DataRequired(message="Insira seu nome de usuário!"), 
