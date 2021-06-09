@@ -47,42 +47,38 @@
             <a class="navbar-brand mr-4" href="{{ url_for('main.home') }}" style="padding-left:1em"><i>polidoc.com</i></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
-            </button>
+            </button>            
             <div class="collapse navbar-collapse" id="navbarToggle">
-              <div class="navbar-nav mr-auto">
-              </div>
             {% if current_user.is_authenticated %}
-              <div class="collapse navbar-collapse" id="navbarToggle">
-                <div class="navbar-nav mr-auto">
-                  <a class="nav-item nav-link" href="{{ url_for('documentos.documento') }}">Documentos</a>
-                  
-                  {% if current_user.admin %}
-                  <a class="nav-item nav-link" href="{{ url_for('usuarios.lista_usuarios') }}">Usuarios</a>
-                  <!-- outras funcoes -->
-                  {% endif %}
-                </div>
-                <!-- Navbar Right Side -->
+                    <div class="navbar-nav mr-auto">
+                        <a class="nav-item nav-link" href="{{ url_for('documentos.documento') }}">Documentos</a>
+                    
+                    {% if current_user.admin %}
+                        <a class="nav-item nav-link" href="{{ url_for('usuarios.lista_usuarios') }}">Usuarios</a>
+                    <!-- outras funcoes -->
+                    {% endif %}
+                    </div>
+                    <!-- Navbar Right Side -->
                     <div class="navbar-nav">
                         <a class="nav-item nav-link" href="{{ url_for('usuarios.logout') }}">Logout</a>
                     </div>
                 </div>
             {% elif request.path == '/login' %}
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="{{ url_for('usuarios.cadastro') }}">Cadastro</a>
-            </div>
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="{{ url_for('usuarios.cadastro') }}">Cadastro</a>
+                </div>
             {% elif request.path == '/cadastro' %}
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="{{ url_for('usuarios.login') }}">Login</a>
-            </div>
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="{{ url_for('usuarios.login') }}">Login</a>
+                </div>
             {% else %}
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="{{ url_for('usuarios.login') }}">Login</a>
-                <a class="nav-item nav-link" href="{{ url_for('usuarios.cadastro') }}">Cadastro</a>
-            </div>
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="{{ url_for('usuarios.login') }}">Login</a>
+                    <a class="nav-item nav-link" href="{{ url_for('usuarios.cadastro') }}">Cadastro</a>
+                </div>
               </div>
             {% endif %}
             </div>
-          </div>
         </nav>
     </header>
     <!-- Content container -->
