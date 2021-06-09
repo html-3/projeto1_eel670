@@ -1,4 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request, Blueprint
+from werkzeug.utils import escape
 from app import db, bcrypt
 from datetime import datetime
 from flask_login import login_user, current_user, logout_user, login_required
@@ -15,10 +16,13 @@ def login():
     form = Login()
     if form.validate_on_submit():
         usuario = Usuario.query.filter_by(nome_usuario=form.nome_usuario.data).first()
-        if usuario and bcrypt.check_password_hash(usuario.senha, form.senha.data):
+
+        if usuario and bcrypt.check_password_hash(usuario.senha, form.senha.data) and usuario.confirmado:
             login_user(usuario, remember=form.lembrar.data)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('main.home'))
+        elif usuario and bcrypt.check_password_hash(usuario.senha, form.senha.data) and not usuario.confirmado:
+            flash('Favor confirmar o seu email antes de fazer o login.', 'warning')
         else:
             flash('Acesso mal sucedido. Por favor reveja usuario e senha', 'danger')
     return render_template('usuario/login.html', title='Login', form=form)
@@ -45,7 +49,6 @@ def cadastro():
         login_user(usuario)
 
         dados = Dados(
-                    usuario_id=usuario.id,
                     dre=form.dre.data, 
                     nome=form.nome.data, 
                     curso=form.curso.data,
