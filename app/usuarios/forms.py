@@ -41,17 +41,17 @@ class Cadastro(FlaskForm):
 
 
     # confirma se já existe na db ou nao
-    def validar_nome_usuario(self,nome_usuario):
+    def validate_nome_usuario(self,nome_usuario):
        existe = Usuario.query.filter_by(nome_usuario=nome_usuario.data).first()
        if existe:
            raise ValidationError("Escolha outro nome de usuario!")
     
-    def validar_dre(self,dre):
+    def validate_dre(self,dre):
        existe = Dados.query.filter_by(dre=dre.data).first()
        if existe:
            raise ValidationError("Já existe uma conta com esse DRE.")
 
-    def validar_email(self,email):
+    def validate_email(self,email):
        existe = Usuario.query.filter_by(email=email.data).first()
        if existe:
           raise ValidationError("Já existe uma conta com esse email.")
@@ -78,14 +78,15 @@ class UpdateAcountForm(FlaskForm):
                         Length(min=5, max=50, message="Email muito longo/curto!")])
     picture = FileField('Atualizar Foto de Perfil', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Atualizar')
-    def validate_nome(self,nome_usuario):
+    
+    def validate_mudarnome(self,nome_usuario):
         if nome_usuario.data != current_user.nome_usuario:
             existe = Usuario.query.filter_by(nome_usuario=nome_usuario.data).first()
             if existe:
                 raise ValidationError("Já existe uma conta com esse nome de usuario")
         
     
-    def validate_email(self,email):
+    def validate_mudaremail(self,email):
         if email.data != current_user.email:
             existe = Usuario.query.filter_by(email=email.data).first()
             if existe:
