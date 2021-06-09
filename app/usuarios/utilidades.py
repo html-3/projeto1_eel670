@@ -4,7 +4,7 @@ from itsdangerous import URLSafeTimedSerializer
 from flask import flash, redirect, url_for, abort
 from flask_login import current_user
 from app import app, mail
-
+import os, secrets
 
 def gerar_token(email):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
@@ -40,3 +40,12 @@ def check_confirmed(func):
         return func(*args, **kwargs)
 
     return decorated_function
+
+def save_picture(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
+    form_picture.save(picture_path)
+    
+    return picture_fn

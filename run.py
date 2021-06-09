@@ -1,11 +1,11 @@
 from app import app
-#from app.dummy_data import create_dd
+from app.dummy_data import create_dd
 
 # forca o update com o código do master
 # git push origin development:master -f
 
 if __name__ == "__main__":
-    #create_dd()
+    create_dd()
     app.run()
 
 # sqlalchemy.exc.IntegrityError

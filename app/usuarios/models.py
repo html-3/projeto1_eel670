@@ -15,7 +15,10 @@ class Usuario(db.Model, UserMixin):
     email = db.Column(db.String(50), unique=True, nullable=False)
     confirmado =  db.Column(db.Boolean, nullable=False, default=False)
     admin =  db.Column(db.Boolean, default=False)
-
+    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    '''Coluna de armazenamento das fotos de perfil, por padrão enquanto o usuario 
+    não adicionar uma foto ele usará uma default que temos que adicionar a pasta 
+    "profile_pics" dentro de "static".'''
     dados = db.relationship('Dados', backref='discente', uselist=False, lazy=True)
 
     def __repr__(self):

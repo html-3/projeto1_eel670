@@ -2,9 +2,9 @@ from flask import render_template, flash, redirect, url_for, request, Blueprint
 from app import db, bcrypt
 from datetime import datetime
 from flask_login import login_user, current_user, logout_user, login_required
-from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed #, login_check
+from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed, save_picture #, login_check
 from .models import Usuario, Dados
-from .forms import Login, Cadastro
+from .forms import Login, Cadastro, UpdateAcountForm 
 
 usuarios = Blueprint('usuarios', __name__)
 
@@ -15,10 +15,12 @@ def login():
     form = Login()
     if form.validate_on_submit():
         usuario = Usuario.query.filter_by(nome_usuario=form.nome_usuario.data).first()
-        if usuario and bcrypt.check_password_hash(usuario.senha, form.senha.data):
+        if usuario and bcrypt.check_password_hash(usuario.senha, form.senha.data) and usuario.confirmado:
             login_user(usuario, remember=form.lembrar.data)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('main.home'))
+        elif usuario and bcrypt.check_password_hash(usuario.senha, form.senha.data) and not usuario.confirmado:
+            flash('Favor confirmar o seu email antes de fazer o login.', 'warning')
         else:
             flash('Acesso mal sucedido. Por favor reveja usuario e senha', 'danger')
     return render_template('usuario/login.html', title='Login', form=form)
@@ -45,7 +47,6 @@ def cadastro():
         login_user(usuario)
 
         dados = Dados(
-                    usuario_id=usuario.id,
                     dre=form.dre.data, 
                     nome=form.nome.data, 
                     curso=form.curso.data,
@@ -142,3 +143,22 @@ def conta(nome_usuario):
 # <a class="nav-item nav-link" href="{{ url_for('conta') }}">Conta</a> 
 # ao parecer comentários dentro do html causam problemas quando contem código do python
 # isto pertence ao layout na parte {% if user_is_authenticated %}
+
+@usuarios.route("/account", methods = ['GET','POST'])#Página da conta do Usuario
+def account():
+    form = UpdateAcountForm()
+    if form.validate_on_submit():
+        if form.picture.data:
+            picture_file = save_picture(form.picture.data)
+            current_user.image_file = picture_file
+        current_user.nome_usuario = form.nome_usuario.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Sua conta foi atualizada','sucess')
+        return redirect(url_for('usuarios.account'))
+    elif request.method == 'GET':
+        form.nome_usuario.data = current_user.nome_usuario
+        form.email.data = current_user.email
+    image_file = url_for('static', filename='profile_pics/' + current_user.image_file) #atualiza a imagem de perfil do usuario
+    return render_template('usuario/account.html', title='Account', 
+                            image_file=image_file, form = form) #chama o template da conta

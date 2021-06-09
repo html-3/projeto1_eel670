@@ -42,12 +42,16 @@
     <header class="site-header">    
         <nav class="navbar navbar-custom navbar-expand-md navbar-light fixed-top">
           <div class="container">
-            <a href="{{ url_for('main.home')}}">
-            <img id="logo" src="{{ url_for('static', filename='favicon.png') }}" style="height: 30px; "></a>
-            <a class="navbar-brand mr-4" href="{{ url_for('main.home') }}" style="padding-left:1em"><i>polidoc.com</i></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>            
+            <div class="container">
+                <a href="{{ url_for('main.home')}}">
+                    <img id="logo" src="{{ url_for('static', filename='favicon.png') }}" style="height: 30px; ">
+                </a>
+                <a class="navbar-brand mr-4" href="{{ url_for('main.home') }}" style="padding-left:1em"><i>polidoc.com</i></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+          </div>      
+            <div class="d-flex justify-content-end">              
             <div class="collapse navbar-collapse" id="navbarToggle">
             {% if current_user.is_authenticated %}
                     <div class="navbar-nav mr-auto">
@@ -60,9 +64,10 @@
                     </div>
                     <!-- Navbar Right Side -->
                     <div class="navbar-nav">
+                        <a class="nav-item nav-link" href="{{ url_for('usuarios.account') }}">Minha Conta</a>
                         <a class="nav-item nav-link" href="{{ url_for('usuarios.logout') }}">Logout</a>
                     </div>
-                </div>
+                
             {% elif request.path == '/login' %}
                 <div class="navbar-nav">
                     <a class="nav-item nav-link" href="{{ url_for('usuarios.cadastro') }}">Cadastro</a>
@@ -76,15 +81,17 @@
                     <a class="nav-item nav-link" href="{{ url_for('usuarios.login') }}">Login</a>
                     <a class="nav-item nav-link" href="{{ url_for('usuarios.cadastro') }}">Cadastro</a>
                 </div>
-              </div>
+              
             {% endif %}
+            </div>
+            </div>
             </div>
         </nav>
     </header>
     <!-- Content container -->
     <main role="main" class="container">
     <div class="row">
-        <div class="col-md-8">
+          <div class="col-md-8">
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
             {% for category, message in messages %}
@@ -96,25 +103,7 @@
             {% endwith %}
             {% block content %}{% endblock %}
         </div>
-        {% if not current_user.admin %}
-        <div class="col-md-4">
-            <div class="content-section">
-                {% if current_user.is_authenticated %}
-                    <h4>Seja Bem-vindo, @{{ current_user.nome_usuario }}! </h4>
-                {% else %}
-                    <h3>Seja Bem-vindo!</h3>
-                {% endif %}
-                <p class='text-muted'>Oferecemos serviços como:
-                <ul class="list-group">
-                    <li class="list-group-item list-group-item-light">Adição de documentos</li>
-                    <li class="list-group-item list-group-item-light">Acesse livros, listas e provas</li>
-                    <li class="list-group-item list-group-item-light">Gabarito incluidos 😎</li>
-                    <li class="list-group-item list-group-item-light">E mais!</li>
-                </ul>
-                </p>
-            </div>
-            </div>
-        {% endif %}
+        
     </div>
     
     </main>

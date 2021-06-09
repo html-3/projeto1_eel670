@@ -1,4 +1,5 @@
 /site.db
 __pycache__
-dummy_data.py
 config.py
+/site.db-journal
+/app/static/profile_pics
