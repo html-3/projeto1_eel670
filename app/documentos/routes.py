@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request, Blueprint
 from app import db
 from flask_login import current_user, login_required
-from app.usuarios.utilidades import check_confirmed, login_check
+from app.usuarios.utilidades import check_confirmed #, login_check
 from .models import Doc, ComentarioDoc
 from .forms import AdicionarDoc, AdicionarCom
 

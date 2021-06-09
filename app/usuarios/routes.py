@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, Blueprint
 from app import db, bcrypt
 from datetime import datetime
 from flask_login import login_user, current_user, logout_user, login_required
-from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed, login_check
+from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed #, login_check
 from .models import Usuario, Dados
 from .forms import Login, Cadastro
 
@@ -49,7 +49,8 @@ def cadastro():
                     dre=form.dre.data, 
                     nome=form.nome.data, 
                     curso=form.curso.data,
-                    periodo=form.periodo.data)
+                    periodo=form.periodo.data,
+                    discente=usuario)
         db.session.add(dados)
         db.session.commit()
 
@@ -64,13 +65,13 @@ def confirmar_email(token):
         email = confirmar_token(token)
     except:
         flash('O link de confirmação não é válido ou expirou.', 'danger')
-    user =  Usuario.query.filter_by(email=email).first_or_404()
-    if user.confirmado:
+    usuario =  Usuario.query.filter_by(email=email).first()
+    if usuario.confirmado:
         flash('Conta já foi confirmada. Favor efetuar login.', 'success')
     else:
-        user.confirmado = True
-        user.registrado_data = datetime.now()
-        db.session.add(user)
+        usuario.confirmado = True
+        usuario.registrado_data = datetime.now()
+        db.session.add(usuario)
         db.session.commit()
         flash('Sua conta foi confirmada com sucesso.', 'success')
     return redirect(url_for('main.home'))

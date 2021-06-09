@@ -16,7 +16,7 @@ class Usuario(db.Model, UserMixin):
     confirmado =  db.Column(db.Boolean, nullable=False, default=False)
     admin =  db.Column(db.Boolean, default=False)
 
-    dados = db.relationship('Dados', backref='discente', lazy='dynamic')
+    dados = db.relationship('Dados', backref='discente', uselist=False, lazy=True)
 
     def __repr__(self):
         return f"{self.id} - @{self.nome_usuario} - {self.email}'"
