@@ -153,12 +153,20 @@ def account():
             current_user.image_file = picture_file
         current_user.nome_usuario = form.nome_usuario.data
         current_user.email = form.email.data
+        current_user.dados.dre = form.dre.data
+        current_user.dados.periodo = form.periodo.data
+        current_user.dados.curso = form.curso.data
+        current_user.dados.nome = form.nome.data
         db.session.commit()
         flash('Sua conta foi atualizada','sucess')
         return redirect(url_for('usuarios.account'))
     elif request.method == 'GET':
         form.nome_usuario.data = current_user.nome_usuario
         form.email.data = current_user.email
+        form.dre.data = current_user.dados.dre
+        form.periodo.data = current_user.dados.periodo
+        form.curso.data = current_user.dados.curso
+        form.nome.data = current_user.dados.nome
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file) #atualiza a imagem de perfil do usuario
     return render_template('usuario/account.html', title='Account', 
                             image_file=image_file, form = form) #chama o template da conta

@@ -1,3 +1,4 @@
+from flask.helpers import flash
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, Length, Optional, Email, EqualTo, ValidationError
@@ -76,6 +77,21 @@ class UpdateAcountForm(FlaskForm):
                         DataRequired(message="Insira seu email"), 
                         Email(message="Insira um email válido!"), 
                         Length(min=5, max=50, message="Email muito longo/curto!")])
+    nome = StringField('Nome', validators=[
+                        DataRequired(message="Insira seu nome!"), 
+                        Length(min=5, max=100, message="Nome muito longo/curto!")])
+
+    dre = StringField('DRE', validators=[
+                        DataRequired(message="Insira seu DRE!"), 
+                        Length(min=9, max=9, message="Insira apenas 9 digitos!")])
+
+    curso = StringField('Curso', validators=[
+                        DataRequired(message="Insira seu curso!"), 
+                        Length(min=5, max=50, message="Nome de curso muito longo/curto!")])
+
+    periodo = IntegerField('Período', validators=[
+                        DataRequired(message="Insira seu período!")])
+
     picture = FileField('Atualizar Foto de Perfil', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Atualizar')
     
@@ -91,3 +107,10 @@ class UpdateAcountForm(FlaskForm):
             existe = Usuario.query.filter_by(email=email.data).first()
             if existe:
                 raise ValidationError("Já existe uma conta com esse email.")
+    
+    def validate_dre(self,dre):
+        if dre.data != current_user.dados.dre:
+            existe = Dados.query.filter_by(dre=dre.data).first()
+            if existe:
+                raise ValidationError("Já existe uma conta com esse DRE.")
+        
