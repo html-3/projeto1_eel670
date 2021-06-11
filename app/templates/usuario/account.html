@@ -7,7 +7,9 @@
           <h2 class="account-heading">{{ current_user.dados.nome }}</h2> <!--Trazendo o username do usuário atualizada ao template-->
           <p class="text-secondary">{{ current_user.nome_usuario }} - {{ current_user.email }}</p> <!--Trazendo o email do usuário atualizado ao template-->
           <p class="text-secondary">DRE: {{ current_user.dados.dre }}</p> <!--Trazendo o dre do usuário atualizado ao template-->
+          {% if not current_user.admin %}
           <p class="text-secondary"> {{ current_user.dados.curso }} - {{ current_user.dados.periodo }}° período</p> <!--Trazendo o dre do usuário atualizado ao template-->
+          {% endif %}
         </div>
       </div>
         <form method="POST" action="" enctype="multipart/form-data">

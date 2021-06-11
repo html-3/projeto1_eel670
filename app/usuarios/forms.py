@@ -7,7 +7,7 @@ from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user    
 
 class Cadastro(FlaskForm):
-    dre = StringField('DRE', validators=[
+    dre = IntegerField('DRE', validators=[
                         DataRequired(message="Insira seu DRE!"), 
                         Length(min=9, max=9, message="Insira apenas 9 digitos!")])
 
@@ -81,7 +81,7 @@ class UpdateAcountForm(FlaskForm):
                         DataRequired(message="Insira seu nome!"), 
                         Length(min=5, max=100, message="Nome muito longo/curto!")])
 
-    dre = StringField('DRE', validators=[
+    dre = IntegerField('DRE', validators=[
                         DataRequired(message="Insira seu DRE!"), 
                         Length(min=9, max=9, message="Insira apenas 9 digitos!")])
 
@@ -101,7 +101,6 @@ class UpdateAcountForm(FlaskForm):
             if existe:
                 raise ValidationError("Já existe uma conta com esse nome de usuario")
         
-    
     def validate_email(self,email):
         if email.data != current_user.email:
             existe = Usuario.query.filter_by(email=email.data).first()
@@ -113,4 +112,15 @@ class UpdateAcountForm(FlaskForm):
             existe = Dados.query.filter_by(dre=dre.data).first()
             if existe:
                 raise ValidationError("Já existe uma conta com esse DRE.")
-        
+
+class ConfirmarEmail(FlaskForm):
+
+    email = StringField('Email', validators=[
+                        DataRequired(message="Insira seu email"), 
+                        Email(message="Insira um email válido!"), 
+                        Length(min=5, max=50, message="Email muito longo/curto!")])
+
+    def validate_email(self,email):
+        existe = Usuario.query.filter_by(email=email.data).first()
+        if not existe:
+            raise ValidationError("Não existe conta registrada com esse email.")

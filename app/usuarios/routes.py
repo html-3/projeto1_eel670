@@ -1,10 +1,11 @@
 from flask import render_template, flash, redirect, url_for, request, Blueprint
+from flask_wtf import form
 from app import db, bcrypt
 from datetime import datetime
 from flask_login import login_user, current_user, logout_user, login_required
 from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed, save_picture #, login_check
 from .models import Usuario, Dados
-from .forms import Login, Cadastro, UpdateAcountForm 
+from .forms import Login, Cadastro, UpdateAcountForm, ConfirmarEmail
 
 usuarios = Blueprint('usuarios', __name__)
 
@@ -60,7 +61,6 @@ def cadastro():
     return render_template('usuario/cadastro.html', title='Cadastro', form=form)   
 
 @usuarios.route('/confirmar/<token>')
-@login_required
 def confirmar_email(token):
     try:
         email = confirmar_token(token)
@@ -71,7 +71,7 @@ def confirmar_email(token):
         flash('Conta já foi confirmada. Favor efetuar login.', 'success')
     else:
         usuario.confirmado = True
-        usuario.registrado_data = datetime.now()
+        usuario.registrado_data = datetime.now() #Não existe. 
         db.session.add(usuario)
         db.session.commit()
         flash('Sua conta foi confirmada com sucesso.', 'success')
@@ -85,17 +85,29 @@ def n_confirmado():
     return render_template('usuario/n_confirmado.html')
 
 @usuarios.route('/reenviar')
-@login_required
 def reenviar_confirmacao():
     token = gerar_token(current_user.email)
     confirmar_url = url_for('usuarios.confirmar_email', token=token, _external=True)
     html = render_template('usuario/email.html', confirmar_url=confirmar_url)
-    subject = 'Por favor, confirme o seu email'
+    subject = 'Email de confirmação - PoliDoc'
     enviar_email(current_user.email, subject, html)
 
     flash('Um novo link de confirmação foi enviado via email.', 'success')
 
     return redirect(url_for('usuarios.n_confirmado'))
+
+@usuarios.route('/reenviar_logout',  methods = ["GET","POST"])
+def reenviar_confirmacao_logout():
+    form = ConfirmarEmail()
+    if form.validate_on_submit():
+        token = gerar_token(form.email.data)
+        confirmar_url = url_for('usuarios.confirmar_email', token=token, _external=True)
+        html = render_template('usuario/email.html', confirmar_url=confirmar_url)
+        subject = 'Email de confirmação - PoliDoc'
+        enviar_email(form.email.data, subject, html)
+        flash('Um novo link de confirmação foi enviado via email.', 'success')
+
+    return render_template('usuario/reenviar_email.html', title ='Reenvio de confirmação', form=form)
 
 @usuarios.route('/lista_usuarios', methods=['GET'])
 @login_required
