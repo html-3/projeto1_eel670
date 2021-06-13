@@ -1,7 +1,7 @@
 from app import db, bcrypt
 from .usuarios.models import Usuario, Dados
-from .documentos.models import Doc, ComentarioDoc
-
+from .documentos.models import Documento, ComentarioDocumento
+from .docentes.models import Docente, ComentarioDocente
 
 def create_dd():
     db.create_all()
@@ -42,18 +42,30 @@ def create_dd():
             periodo="0",
             discente=admin))
 
-    if not Doc.query.filter_by(titulo="Prova 1 Circuitos Lógicos").first():
-        db.session.add(Doc(
+    if not Documento.query.filter_by(titulo="Prova 1 Circuitos Lógicos").first():
+        db.session.add(Documento(
             titulo="Prova 1 Circuitos Lógicos",
             autor="Diego Dutra",
             tipo="Prova",
             formato="pdf",
             link="https://www.compasso.ufrj.br/disciplinas/eel280"))
-        db.session.add(Doc(
+        db.session.add(Documento(
             titulo="Prova 1 Cálculo II",
             autor="Departamento de Matemática",
             tipo="Prova",
             formato="pdf",
             link="https://arquimedes.nce.ufrj.br/calculo2/"))
+
+    if not Docente.query.filter_by(nome="Claudio Miceli").first():
+        db.session.add(Docente(
+                        nome="Claudio Miceli", 
+                        email="cmicelifarias@cos.ufrj.br",
+                        dep="Sistemas e Computação", 
+                        link_ufrj="https://www.cos.ufrj.br/index.php/pt-BR/telefones-do-pesc/details/3/2783"))
+        db.session.add(Docente(
+                        nome="Diego Dutra", 
+                        email="diegodutra@poli.ufrj.br",
+                        dep="Eletrônica e de Computação", 
+                        link_ufrj="https://www.del.ufrj.br/equipe/docentes/diego-dutra"))
     
     db.session.commit()

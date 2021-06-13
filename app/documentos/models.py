@@ -1,7 +1,7 @@
 from app import db
 from datetime import datetime
 
-class Doc(db.Model):
+class Documento(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     titulo = db.Column(db.String(150), nullable=False)
     # matéria (db.List código)
@@ -10,14 +10,14 @@ class Doc(db.Model):
     formato = db.Column(db.String(3), nullable=False)
     link = db.Column(db.String(150), nullable=False)
 
-    comentarios = db.relationship('ComentarioDoc', backref=db.backref('docu', lazy=True))
+    comentarios = db.relationship('ComentarioDocumento', backref=db.backref('docu', lazy=True))
 
     def __repr__(self):
         return f"{self.id} - {self.titulo}.{self.formato} ({self.autor}): {self.link})"
 
-class ComentarioDoc(db.Model):
+class ComentarioDocumento(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    doc_id = db.Column(db.Integer, db.ForeignKey('doc.id'), nullable=False)
+    doc_id = db.Column(db.Integer, db.ForeignKey('documento.id'), nullable=False)
     
     nome_usuario = db.Column(db.String(120), nullable=False)
     conteudo = db.Column(db.String(280), nullable=False)

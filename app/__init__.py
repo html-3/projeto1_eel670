@@ -20,7 +20,9 @@ bcrypt = Bcrypt(app)
 from .main.routes import main
 from .usuarios.routes import usuarios
 from .documentos.routes import documentos
+from .docentes.routes import docentes
 
 app.register_blueprint(main)
 app.register_blueprint(usuarios)
 app.register_blueprint(documentos)
+app.register_blueprint(docentes)

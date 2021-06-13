@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, Blueprint
 from app import db, bcrypt
 from datetime import datetime
 from flask_login import login_user, current_user, logout_user, login_required
-from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed, save_picture #, login_check
+from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed, save_picture 
 from .models import Usuario, Dados
 from .forms import Login, Cadastro, UpdateAcountForm 
 
@@ -48,8 +48,8 @@ def cadastro():
 
         dados = Dados(
                     dre=form.dre.data, 
-                    nome=form.nome.data, 
-                    curso=form.curso.data,
+                    nome=form.nome.data.lower().title(), 
+                    curso=form.curso.data.lower().title(),
                     periodo=form.periodo.data,
                     discente=usuario)
         db.session.add(dados)

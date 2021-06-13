@@ -1,9 +1,9 @@
 from flask import render_template, flash, redirect, url_for, request, Blueprint
 from app import db
 from flask_login import current_user, login_required
-from app.usuarios.utilidades import check_confirmed #, login_check
-from .models import Doc, ComentarioDoc
-from .forms import AdicionarDoc, AdicionarCom
+from app.usuarios.utilidades import check_confirmed 
+from .models import ComentarioDocumento, Documento
+from .forms import AdicionarDocumento, AdicionarComDocumento
 
 documentos = Blueprint('documentos', __name__)
 
@@ -12,15 +12,15 @@ documentos = Blueprint('documentos', __name__)
 @check_confirmed
 def documento():
     page = request.args.get('page', 1, type=int)
-    docs = Doc.query.order_by(Doc.id).paginate(page=page, per_page=5)
+    docs = Documento.query.order_by(Documento.id).paginate(page=page, per_page=5)
 
-    form = AdicionarDoc()
+    form = AdicionarDocumento()
     if form.validate_on_submit():
-        doc = Doc(
-                        titulo=form.titulo.data, 
-                        autor=form.autor.data,
-                        tipo=form.tipo.data, 
-                        formato=form.formato.data,  
+        doc = Documento(
+                        titulo=form.titulo.data.lower().title(), 
+                        autor=form.autor.data.lower().title(),
+                        tipo=form.tipo.data.lower().title(), 
+                        formato=form.formato.data.upper(),  
                         link=form.link.data)
         db.session.add(doc)
         db.session.commit()
@@ -33,12 +33,12 @@ def documento():
 @login_required
 @check_confirmed
 def documento_esp(documento_id):
-    doc = Doc.query.get_or_404(documento_id)
+    doc = Documento.query.get_or_404(documento_id)
 
-    coms = ComentarioDoc.query.filter_by(doc_id=documento_id).all()
-    form = AdicionarCom()
+    coms = ComentarioDocumento.query.filter_by(doc_id=documento_id).all()
+    form = AdicionarComDocumento()
     if form.validate_on_submit():
-        com = ComentarioDoc(
+        com = ComentarioDocumento(
                         doc_id=doc.id, 
                         conteudo=form.conteudo.data,
                         nome_usuario=current_user.nome_usuario)
@@ -54,17 +54,17 @@ def documento_esp(documento_id):
 @login_required
 @check_confirmed
 def editar_documento(documento_id):
-    doc = Doc.query.get_or_404(documento_id)
+    doc = Documento.query.get_or_404(documento_id)
 
     if not current_user.admin:
         redirect(url_for('documentos.documento'))
 
-    form = AdicionarDoc()
+    form = AdicionarDocumento()
     if form.validate_on_submit():
-        doc.titulo = form.titulo.data
-        doc.autor = form.autor.data
-        doc.tipo = form.tipo.data
-        doc.formato = form.formato.data
+        doc.titulo = form.titulo.data.lower().title()
+        doc.autor = form.autor.data.lower().title()
+        doc.tipo = form.tipo.data.lower().title()
+        doc.formato = form.formato.data.upper()
         doc.link = form.link.data
         db.session.commit()
         flash('Documento atualizado!', 'success')
@@ -82,7 +82,7 @@ def editar_documento(documento_id):
 @login_required
 @check_confirmed
 def deletar_documento(documento_id):
-    doc = Doc.query.get_or_404(documento_id)
+    doc = Documento.query.get_or_404(documento_id)
 
     if not current_user.admin:
         redirect(url_for('documentos.documento'))
