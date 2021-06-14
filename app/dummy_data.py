@@ -43,31 +43,47 @@ def create_dd():
             curso="Administracao",
             periodo="0",
             discente=admin))
-
-    if not Documento.query.filter_by(titulo="Prova 1 Circuitos Lógicos").first():
-        db.session.add(Documento(
-            titulo="Prova 1 Circuitos Lógicos",
-            autor="Diego Dutra",
-            tipo="Prova",
-            formato="pdf",
-            link="https://www.compasso.ufrj.br/disciplinas/eel280"))
-        db.session.add(Documento(
-            titulo="Prova 1 Cálculo II",
-            autor="Departamento de Matemática",
-            tipo="Prova",
-            formato="pdf",
-            link="https://arquimedes.nce.ufrj.br/calculo2/"))
-
     if not Docente.query.filter_by(nome="Claudio Miceli").first():
-        db.session.add(Docente(
+        claudio = Docente(
                         nome="Claudio Miceli", 
                         email="cmicelifarias@cos.ufrj.br",
                         dep="Sistemas e Computação", 
-                        link_ufrj="https://www.cos.ufrj.br/index.php/pt-BR/telefones-do-pesc/details/3/2783"))
-        db.session.add(Docente(
+                        link_ufrj="https://www.cos.ufrj.br/index.php/pt-BR/telefones-do-pesc/details/3/2783")
+        monica = Docente(
+                        nome="Monika Merkele", 
+                        email="monica@im.ufrj.br",
+                        dep="Matemática", 
+                        link_ufrj="http://www.im.ufrj.br/index.php/pt/pessoal/docentes/docentes/125-monica-moulin-ribeiro-merkle")
+        diego = Docente(
                         nome="Diego Dutra", 
                         email="diegodutra@poli.ufrj.br",
                         dep="Eletrônica e de Computação", 
-                        link_ufrj="https://www.del.ufrj.br/equipe/docentes/diego-dutra"))
-    
+                        link_ufrj="https://www.del.ufrj.br/equipe/docentes/diego-dutra")
+
+        db.session.add(claudio)
+        db.session.add(monica)
+        db.session.add(diego)
+        if not Documento.query.filter_by(titulo="Prova 1 Circuitos Lógicos 2020.2").first():
+            db.session.add(Documento(
+                titulo="Prova 1 Circuitos Lógicos 2020.2",
+                autor="Diego Dutra",
+                tipo="Prova",
+                formato="PDF",
+                link="https://drive.google.com/file/d/1fq9z9JCfWbET0nPIqTX5zJkvEOOVEr-b/view",
+                dono=diego))
+            db.session.add(Documento(
+                titulo="Prova 2 Circuitos Lógicos 2020.2",
+                autor="Diego Dutra",
+                tipo="Prova",
+                formato="PDF",
+                link="https://drive.google.com/file/d/1G5nGExWy_eQzpxsCi1CabjX6aByZGbTW/view",
+                dono=diego))
+            db.session.add(Documento(
+                titulo="Lista 1 Cálculo II 2020.2",
+                autor="Departamento de Matemática",
+                tipo="Lista",
+                formato="PDF",
+                link="https://drive.google.com/file/d/1mrnkQG59SzJanBe9tGCbmGvobO1meMw2/view",
+                dono=monica))
+
     db.session.commit()
