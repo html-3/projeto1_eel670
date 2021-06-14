@@ -4,19 +4,20 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-    <!-- Import CSS stylesheet -->
+    <!-- Importacao do CSS -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-    <!-- Nao foi possível adicionar um ícone -->
+
+    <!-- Icone do site implementado -->
     <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}">
     {% if title %}
         <title>PoliDoc - {{ title }}</title>
     {% else %}
         <title>PoliDoc</title>
     {% endif %}
+
+    <!-- Styles extras, deveriam ir no CSS -->
     <style>
         body {
             background-color: #cfeedc;
@@ -57,24 +58,34 @@
         <!-- Navbar completo -->
         <nav class="navbar navbar-custom navbar-expand-md navbar-light fixed-top">
           <div class="container">
+
+                <!-- Logo -->
                 <a href="{{ url_for('main.home')}}">
                     <img id="logo" src="{{ url_for('static', filename='favicon.png') }}" style="height: 30px;">
                 </a>
+
+                <!-- Nome do site -->
                 <a class="navbar-brand mr-4" href="{{ url_for('main.home') }}" style="padding-left:1em"><i>PoliDoc</i></a>
+
+                <!-- Botao collapse -->
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>      
+                
             <div class="collapse navbar-collapse" id="navbarToggle">
+
                 <!-- Menus do navbar completa -->
                 <div class="navbar-nav ml-auto">
                     <div class="navbar-nav">
+
                     <!-- Lista de usuarios exclusiva para os admins -->
                     {% if current_user.admin %}
                         {% if not request.path == '/lista_usuarios' %}
                             <a class="nav-item nav-link" href="{{ url_for('usuarios.lista_usuarios') }}">Usuários</a>
                         {% endif %}
                     {% endif %}
-                    <!-- Menus do navbar responsivos quando logado-->
+
+                    <!-- Menus do navbar responsivos quando logado -->
                     {% if current_user.is_authenticated %}
                         {% if request.path == '/documento' %}
                             <a class="nav-item nav-link" href="{{ url_for('docentes.docente') }}">Docentes</a>
@@ -92,7 +103,8 @@
                         {% endif %}
                             <a class="nav-item nav-link" href="{{ url_for('usuarios.logout') }}">Logout</a>
                     {% else %}
-                    <!-- Menus do navbar responsivos nao logado-->
+
+                    <!-- Menus do navbar responsivos nao logado -->
                         {% if request.path == '/login' %}
                                 <a class="nav-item nav-link" href="{{ url_for('usuarios.cadastro') }}">Cadastro</a>
                         {% elif request.path == '/cadastro' %}
@@ -107,10 +119,13 @@
             </div>
         </nav>
     </header>
-    <!-- Content container -->
+
+    <!-- Container geral do site -->
     <main role="main" class="container">
     <div class="row justify-content-center">
-          <div class="col-md-8 align-self-center">
+
+        <!-- Mensagens de erro -->
+        <div class="col-md-8 align-self-center">
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
             {% for category, message in messages %}
@@ -120,6 +135,8 @@
             {% endfor %}
             {% endif %}
             {% endwith %}
+
+            <!-- Titulo das paginas -->
             {% if request.path == '/home' %}
                 <h1>Projeto 1 para EEL670</h1>
             {% elif current_user.admin %}
@@ -131,25 +148,26 @@
             {% else %}
                 <h1>{{ title }}</h1>
             {% endif %}
+
+            <!-- Container real site -->
             {% block content %}{% endblock %}
         </div>
-        
     </div>
-    
     </main>
     </div>
+
+    <!-- Footer com link do github -->
     <footer class="text-center text-lg-start bg-g text-muted">
         <a href="https://github.com/html-3/projeto1_eel670">
         <img src="{{ url_for('static', filename='github-logo.png') }}" style="height: 35px; margin: 15px;">
         </a>
     </footer>
     </div>
-
+    <!-- Sem ideia doque faz isto, nao excluir -->
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
 </body>
 </html>
