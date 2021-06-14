@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, Blueprint
 from app import db, bcrypt
 from datetime import datetime
 from flask_login import login_user, current_user, logout_user, login_required, login_manager
-from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed, save_picture
+from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed, save_picture, upload_files
 from .models import Usuario, Dados
 from .forms import Login, Cadastro, UpdateAccountForm, ConfirmarEmail
 
@@ -141,14 +141,10 @@ def minha_conta():
     if form.validate_on_submit():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
+            picture_path = "app/static/profile_pics/"+picture_file
             current_user.image_file = picture_file
-        """current_user.nome_usuario = form.nome_usuario.data
-        current_user.email = form.email.data
-        current_user.dados.dre = form.dre.data
-        current_user.dados.periodo = form.periodo.data
-        current_user.dados.curso = form.curso.data
-        current_user.dados.nome = form.nome.data.lower().title()
-        current_user.dados.nome = form.nome.data"""
+            send = Thread(target=upload_files, args=(picture_path,), daemon=True)
+            send.start()
         Usuario.query.filter_by(id=current_user.id).update(dict(nome_usuario = form.nome_usuario.data, email = form.email.data))
         Dados.query.filter_by(usuario_id=current_user.id).update(dict(dre = form.dre.data, periodo = form.periodo.data, curso = form.curso.data, nome = form.nome.data.lower().title()))
         db.session.commit()
