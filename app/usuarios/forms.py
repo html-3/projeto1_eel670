@@ -75,7 +75,7 @@ class Login(FlaskForm):
 
     submeter = SubmitField('Entrar')
 
-class UpdateAcountForm(FlaskForm):
+class UpdateAccountForm(FlaskForm):
     nome = StringField('Nome', validators=[
                         DataRequired(message="Insira seu nome!"), 
                         Length(min=5, max=100, message="Nome muito longo/curto!")])

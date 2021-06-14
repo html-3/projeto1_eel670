@@ -4,7 +4,7 @@ from datetime import datetime
 from flask_login import login_user, current_user, logout_user, login_required, login_manager
 from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed, save_picture
 from .models import Usuario, Dados
-from .forms import Login, Cadastro, UpdateAcountForm, ConfirmarEmail
+from .forms import Login, Cadastro, UpdateAccountForm, ConfirmarEmail
 
 usuarios = Blueprint('usuarios', __name__)
 # pagina de login para usuarios
@@ -137,7 +137,7 @@ def logout():
 @login_required
 @check_confirmed
 def minha_conta():
-    form = UpdateAcountForm()
+    form = UpdateAccountForm()
     if form.validate_on_submit():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
@@ -164,3 +164,15 @@ def minha_conta():
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file) #atualiza a imagem de perfil do usuario
     return render_template('usuario/minha_conta.html', title='Minha Conta', 
                             image_file=image_file, form = form) #chama o template da conta
+
+@usuarios.route('/minha_conta/deletar', methods=['GET','POST'])
+@login_required
+@check_confirmed
+def excluir_conta():
+    usuario = Dados.query.filter_by(usuario_id=current_user.dados.usuario_id).first()
+    db.session.delete(usuario)
+    usuario = Usuario.query.filter_by(id=current_user.id).first()
+    db.session.delete(usuario)
+    db.session.commit()
+    flash('Seu usuário foi excluído com sucesso! Esperamos ter ajudado, a porta da frente estará sempre aberta.', 'warning')
+    return redirect(url_for('main.home'))
