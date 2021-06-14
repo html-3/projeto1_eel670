@@ -5,6 +5,8 @@ from flask_mail import Mail
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from config import DevelopmentConfig
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
 
 # instanciacao do aplicativo web
 app = Flask(__name__)
@@ -17,6 +19,10 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 bcrypt = Bcrypt(app)
+gauth = GoogleAuth()
+gauth.LocalWebserverAuth()
+drive = GoogleDrive(gauth)
+
 
 # importar os Blueprints de cada parte do codigo
 from .main.routes import main

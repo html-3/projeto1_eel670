@@ -3,8 +3,21 @@ from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer
 from flask import flash, redirect, url_for, abort
 from flask_login import current_user
-from app import app, mail
+from app import app, mail, drive
+from .models import Usuario
 import os, secrets
+
+def upload_files(upload_file):
+    
+    gfile = drive.CreateFile({'parents': [{'id': '1rXtdkLm3jsrTqpv4Km_mzGmYOWoBjoph'}]})
+    gfile.SetContentFile(upload_file)
+    gfile.Upload()
+
+"""def verify_file_list(file_name):
+    file_list = drive.ListFile({'q': "'{}' in parents and trashed=false".format('1cIMiqUDUNldxO6Nl-KVuS9SV-cWi9WLi')}).GetList()
+    for file in file_list:
+        if file['title'] == file_name:
+            Usuario.query.filter_by().first"""
 
 def gerar_token(email):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
