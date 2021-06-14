@@ -35,64 +35,80 @@
             height:100%;
             overflow-x: hidden;
             }
+        #page-container {
+            position: relative;
+            min-height: 100vh;
+        }
+        #content-wrap {
+            padding-bottom: 4rem;    /* Footer height */
+        }
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 3.5rem;          /* Footer height */
+        }
     </style>
 </head>
 <body>
-    <!-- Navbar com Home, About, Login e Sign Up -->
-    <header class="site-header">    
+    <div id="page-container">
+    <div id="content-wrap">
+    <header class="site-header">
+        <!-- Navbar completo -->
         <nav class="navbar navbar-custom navbar-expand-md navbar-light fixed-top">
           <div class="container">
-            <div class="container">
                 <a href="{{ url_for('main.home')}}">
-                    <img id="logo" src="{{ url_for('static', filename='favicon.png') }}" style="height: 30px; ">
+                    <img id="logo" src="{{ url_for('static', filename='favicon.png') }}" style="height: 30px;">
                 </a>
                 <a class="navbar-brand mr-4" href="{{ url_for('main.home') }}" style="padding-left:1em"><i>polidoc.com</i></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-                </button>
-          </div>      
-            <div class="d-flex justify-content-end">              
+                    <span class="navbar-toggler-icon"></span>
+                </button>      
             <div class="collapse navbar-collapse" id="navbarToggle">
-            {% if current_user.is_authenticated %}
-                    <div class="navbar-nav mr-auto">
-                        <a class="nav-item nav-link" href="{{ url_for('documentos.documento') }}">Documentos</a>
-                        <a class="nav-item nav-link" href="{{ url_for('docentes.docente') }}">Docentes</a>
-                    
+                <!-- Menus do navbar completa -->
+                <div class="navbar-nav ml-auto">
+                    <div class="navbar-nav">
+                    <!-- Lista de usuarios exclusiva para os admins -->
                     {% if current_user.admin %}
-                        <a class="nav-item nav-link" href="{{ url_for('usuarios.lista_usuarios') }}">Usuarios</a>
-                    <!-- outras funcoes -->
+                            <a class="nav-item nav-link" href="{{ url_for('usuarios.lista_usuarios') }}">Usuários</a>
+                    {% endif %}
+                    <!-- Menus do navbar responsivos quando logado-->
+                    {% if current_user.is_authenticated %}
+                        {% if request.path == '/documento' %}
+                            <a class="nav-item nav-link" href="{{ url_for('docentes.docente') }}">Docentes</a>
+                            <a class="nav-item nav-link" href="{{ url_for('usuarios.account') }}">Minha Conta</a>
+                        {% elif request.path == '/docente' %}
+                            <a class="nav-item nav-link" href="{{ url_for('documentos.documento') }}">Documentos</a>
+                            <a class="nav-item nav-link" href="{{ url_for('usuarios.account') }}">Minha Conta</a>
+                        {% elif request.path == '/account' %}
+                            <a class="nav-item nav-link" href="{{ url_for('documentos.documento') }}">Documentos</a>
+                            <a class="nav-item nav-link" href="{{ url_for('docentes.docente') }}">Docentes</a>
+                        {% else %}
+                            <a class="nav-item nav-link" href="{{ url_for('documentos.documento') }}">Documentos</a>
+                            <a class="nav-item nav-link" href="{{ url_for('docentes.docente') }}">Docentes</a>
+                            <a class="nav-item nav-link" href="{{ url_for('usuarios.account') }}">Minha Conta</a>
+                        {% endif %}
+                            <a class="nav-item nav-link" href="{{ url_for('usuarios.logout') }}">Logout</a>
+                    {% else %}
+                    <!-- Menus do navbar responsivos nao logado-->
+                        {% if request.path == '/login' %}
+                                <a class="nav-item nav-link" href="{{ url_for('usuarios.cadastro') }}">Cadastro</a>
+                        {% elif request.path == '/cadastro' %}
+                                <a class="nav-item nav-link" href="{{ url_for('usuarios.login') }}">Login</a>
+                        {% else %}
+                                <a class="nav-item nav-link" href="{{ url_for('usuarios.login') }}">Login</a>
+                                <a class="nav-item nav-link" href="{{ url_for('usuarios.cadastro') }}">Cadastro</a>
+                        {% endif %}
                     {% endif %}
                     </div>
-                    <!-- Navbar Right Side -->
-                    <div class="navbar-nav">
-                        <a class="nav-item nav-link" href="{{ url_for('usuarios.account') }}">Minha Conta</a>
-                        <a class="nav-item nav-link" href="{{ url_for('usuarios.logout') }}">Logout</a>
-                    </div>
-                
-            {% elif request.path == '/login' %}
-                <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="{{ url_for('usuarios.cadastro') }}">Cadastro</a>
                 </div>
-            {% elif request.path == '/cadastro' %}
-                <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="{{ url_for('usuarios.login') }}">Login</a>
-                </div>
-            {% else %}
-                <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="{{ url_for('usuarios.login') }}">Login</a>
-                    <a class="nav-item nav-link" href="{{ url_for('usuarios.cadastro') }}">Cadastro</a>
-                </div>
-              
-            {% endif %}
-            </div>
-            </div>
             </div>
         </nav>
     </header>
     <!-- Content container -->
     <main role="main" class="container">
-    <div class="row">
-          <div class="col-md-8">
+    <div class="row justify-content-center">
+          <div class="col-md-8 align-self-center">
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
             {% for category, message in messages %}
@@ -108,18 +124,19 @@
     </div>
     
     </main>
-    <br><br><br>
-    <footer class="text-center text-lg-start bg-g text-muted" styele="">
+    </div>
+    <footer class="text-center text-lg-start bg-g text-muted">
         <a href="https://github.com/html-3/projeto1_eel670">
         <img src="{{ url_for('static', filename='github-logo.png') }}" style="height: 35px; margin: 15px;">
         </a>
     </footer>
+    </div>
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    
-    
+
 </body>
 </html>

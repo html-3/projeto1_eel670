@@ -21,7 +21,7 @@
 <br>
 {% if current_user.admin %}
 <div>
-  <a class="btn btn-secondary" href="{{ url_for('docente.editar_docente', docente_id=doce.id) }}">Atualizar</a>
+  <a class="btn btn-secondary" href="{{ url_for('docentes.editar_docente', docente_id=doce.id) }}">Atualizar</a>
   <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Deletar</button>
 </div>
 {% endif %}
@@ -65,14 +65,14 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="deleteModalLabel">Delete Documento?</h5>
+          <h5 class="modal-title" id="deleteModalLabel">Delete Docente</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <form action="{{ url_for('documentos.deletar_documento', documento_id=doc.id) }}" method="POST">
+          <form action="{{ url_for('docentes.deletar_docente', docente_id=doce.id) }}" method="POST">
             <input class="btn btn-danger" type="submit" value="Delete">
           </form>
         </div>

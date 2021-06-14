@@ -77,7 +77,7 @@ def editar_docente(docente_id):
         form.siape.data = doce.siape
         form.dep.data = doce.dep
         form.email.data = doce.email
-        form.link_ufrj.data = doce.link_ufrj
+        form.link.data = doce.link_ufrj
     return render_template('docente/editar_docente.html', title="Docente", form=form)
 
 @docentes.route('/editar_docente/<int:docente_id>/deletar', methods=['GET','POST'])

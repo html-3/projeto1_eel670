@@ -4,7 +4,7 @@ from datetime import datetime
 from flask_login import login_user, current_user, logout_user, login_required
 from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed, save_picture 
 from .models import Usuario, Dados
-from .forms import Login, Cadastro, UpdateAcountForm 
+from .forms import Login, Cadastro, UpdateAcountForm, ConfirmarEmail
 
 usuarios = Blueprint('usuarios', __name__)
 
@@ -60,7 +60,6 @@ def cadastro():
     return render_template('usuario/cadastro.html', title='Cadastro', form=form)   
 
 @usuarios.route('/confirmar/<token>')
-@login_required
 def confirmar_email(token):
     try:
         email = confirmar_token(token)
@@ -71,7 +70,7 @@ def confirmar_email(token):
         flash('Conta já foi confirmada. Favor efetuar login.', 'success')
     else:
         usuario.confirmado = True
-        usuario.registrado_data = datetime.now()
+        usuario.registrado_data = datetime.now() #Não existe. 
         db.session.add(usuario)
         db.session.commit()
         flash('Sua conta foi confirmada com sucesso.', 'success')
@@ -85,17 +84,29 @@ def n_confirmado():
     return render_template('usuario/n_confirmado.html')
 
 @usuarios.route('/reenviar')
-@login_required
 def reenviar_confirmacao():
     token = gerar_token(current_user.email)
     confirmar_url = url_for('usuarios.confirmar_email', token=token, _external=True)
     html = render_template('usuario/email.html', confirmar_url=confirmar_url)
-    subject = 'Por favor, confirme o seu email'
+    subject = 'Email de confirmação - PoliDoc'
     enviar_email(current_user.email, subject, html)
 
     flash('Um novo link de confirmação foi enviado via email.', 'success')
 
     return redirect(url_for('usuarios.n_confirmado'))
+
+@usuarios.route('/reenviar_logout',  methods = ["GET","POST"])
+def reenviar_confirmacao_logout():
+    form = ConfirmarEmail()
+    if form.validate_on_submit():
+        token = gerar_token(form.email.data)
+        confirmar_url = url_for('usuarios.confirmar_email', token=token, _external=True)
+        html = render_template('usuario/email.html', confirmar_url=confirmar_url)
+        subject = 'Email de confirmação - PoliDoc'
+        enviar_email(form.email.data, subject, html)
+        flash('Um novo link de confirmação foi enviado via email.', 'success')
+
+    return render_template('usuario/reenviar_email.html', title ='Reenvio de confirmação', form=form)
 
 @usuarios.route('/lista_usuarios', methods=['GET'])
 @login_required
@@ -153,12 +164,20 @@ def account():
             current_user.image_file = picture_file
         current_user.nome_usuario = form.nome_usuario.data
         current_user.email = form.email.data
+        current_user.dados.dre = form.dre.data
+        current_user.dados.periodo = form.periodo.data
+        current_user.dados.curso = form.curso.data
+        current_user.dados.nome = form.nome.data.lower().title()
         db.session.commit()
         flash('Sua conta foi atualizada','sucess')
         return redirect(url_for('usuarios.account'))
     elif request.method == 'GET':
         form.nome_usuario.data = current_user.nome_usuario
         form.email.data = current_user.email
+        form.dre.data = current_user.dados.dre
+        form.periodo.data = current_user.dados.periodo
+        form.curso.data = current_user.dados.curso
+        form.nome.data = current_user.dados.nome
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file) #atualiza a imagem de perfil do usuario
     return render_template('usuario/account.html', title='Account', 
                             image_file=image_file, form = form) #chama o template da conta
