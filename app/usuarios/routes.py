@@ -155,8 +155,8 @@ def conta(nome_usuario):
 # ao parecer comentários dentro do html causam problemas quando contem código do python
 # isto pertence ao layout na parte {% if user_is_authenticated %}
 
-@usuarios.route("/account", methods = ['GET','POST'])#Página da conta do Usuario
-def account():
+@usuarios.route("/minha_conta", methods = ['GET','POST'])#Página da conta do Usuario
+def minha_conta():
     form = UpdateAcountForm()
     if form.validate_on_submit():
         if form.picture.data:
@@ -170,7 +170,7 @@ def account():
         current_user.dados.nome = form.nome.data.lower().title()
         db.session.commit()
         flash('Sua conta foi atualizada','sucess')
-        return redirect(url_for('usuarios.account'))
+        return redirect(url_for('usuarios.minha_conta'))
     elif request.method == 'GET':
         form.nome_usuario.data = current_user.nome_usuario
         form.email.data = current_user.email
@@ -179,5 +179,5 @@ def account():
         form.curso.data = current_user.dados.curso
         form.nome.data = current_user.dados.nome
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file) #atualiza a imagem de perfil do usuario
-    return render_template('usuario/account.html', title='Account', 
+    return render_template('usuario/minha_conta.html', title='Minha Conta', 
                             image_file=image_file, form = form) #chama o template da conta

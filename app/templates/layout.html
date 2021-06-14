@@ -13,9 +13,9 @@
     <!-- Nao foi possível adicionar um ícone -->
     <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}">
     {% if title %}
-        <title>polidoc - {{ title }}</title>
+        <title>PoliDoc - {{ title }}</title>
     {% else %}
-        <title>polidoc</title>
+        <title>PoliDoc</title>
     {% endif %}
     <style>
         body {
@@ -60,7 +60,7 @@
                 <a href="{{ url_for('main.home')}}">
                     <img id="logo" src="{{ url_for('static', filename='favicon.png') }}" style="height: 30px;">
                 </a>
-                <a class="navbar-brand mr-4" href="{{ url_for('main.home') }}" style="padding-left:1em"><i>polidoc.com</i></a>
+                <a class="navbar-brand mr-4" href="{{ url_for('main.home') }}" style="padding-left:1em"><i>PoliDoc</i></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>      
@@ -70,23 +70,25 @@
                     <div class="navbar-nav">
                     <!-- Lista de usuarios exclusiva para os admins -->
                     {% if current_user.admin %}
+                        {% if not request.path == '/lista_usuarios' %}
                             <a class="nav-item nav-link" href="{{ url_for('usuarios.lista_usuarios') }}">Usuários</a>
+                        {% endif %}
                     {% endif %}
                     <!-- Menus do navbar responsivos quando logado-->
                     {% if current_user.is_authenticated %}
                         {% if request.path == '/documento' %}
                             <a class="nav-item nav-link" href="{{ url_for('docentes.docente') }}">Docentes</a>
-                            <a class="nav-item nav-link" href="{{ url_for('usuarios.account') }}">Minha Conta</a>
+                            <a class="nav-item nav-link" href="{{ url_for('usuarios.minha_conta') }}">Minha Conta</a>
                         {% elif request.path == '/docente' %}
                             <a class="nav-item nav-link" href="{{ url_for('documentos.documento') }}">Documentos</a>
-                            <a class="nav-item nav-link" href="{{ url_for('usuarios.account') }}">Minha Conta</a>
-                        {% elif request.path == '/account' %}
+                            <a class="nav-item nav-link" href="{{ url_for('usuarios.minha_conta') }}">Minha Conta</a>
+                        {% elif request.path == '/minha_conta' %}
                             <a class="nav-item nav-link" href="{{ url_for('documentos.documento') }}">Documentos</a>
                             <a class="nav-item nav-link" href="{{ url_for('docentes.docente') }}">Docentes</a>
                         {% else %}
                             <a class="nav-item nav-link" href="{{ url_for('documentos.documento') }}">Documentos</a>
                             <a class="nav-item nav-link" href="{{ url_for('docentes.docente') }}">Docentes</a>
-                            <a class="nav-item nav-link" href="{{ url_for('usuarios.account') }}">Minha Conta</a>
+                            <a class="nav-item nav-link" href="{{ url_for('usuarios.minha_conta') }}">Minha Conta</a>
                         {% endif %}
                             <a class="nav-item nav-link" href="{{ url_for('usuarios.logout') }}">Logout</a>
                     {% else %}
@@ -118,6 +120,17 @@
             {% endfor %}
             {% endif %}
             {% endwith %}
+            {% if request.path == '/home' %}
+                <h1>Projeto 1 para EEL670</h1>
+            {% elif current_user.admin %}
+                <h1>{{ title }} - Moderação</h1>
+            {% elif doc %}
+                <h1>{{ title }} - {{ doc.titulo }}</h1>
+            {% elif doce %}
+                <h1>{{ title }} - {{ doce.titulo }}</h1>
+            {% else %}
+                <h1>{{ title }}</h1>
+            {% endif %}
             {% block content %}{% endblock %}
         </div>
         

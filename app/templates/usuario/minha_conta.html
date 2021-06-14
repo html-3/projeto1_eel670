@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
+
 {% block content %}
     <div class="content-section">
       <div class="media">
         <img class="rounded-circle account-img" src="{{ image_file }}"> <!--Trazendo a imagem de perfil do usuário atualizada ao template-->
         <div class="media-body">
-          <h2 class="account-heading">{{ current_user.dados.nome }}</h2> <!--Trazendo o username do usuário atualizada ao template-->
+          <h3>{{ current_user.dados.nome }}</h3> <!--Trazendo o username do usuário atualizada ao template-->
           <p class="text-secondary">{{ current_user.nome_usuario }} - {{ current_user.email }}</p> <!--Trazendo o email do usuário atualizado ao template-->
           <p class="text-secondary">DRE: {{ current_user.dados.dre }}</p> <!--Trazendo o dre do usuário atualizado ao template-->
           {% if not current_user.admin %}

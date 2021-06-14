@@ -1,8 +1,6 @@
 {% extends "layout.html" %}
 
 {% block content %}
-
-<h1>{{ title }} - {{ doce.nome }}</h1>
 <div role="main" class="content-section">
 <legend class="border-bottom mb-4">Escolha o docente que você deseja acessar!</legend>
   <ul class="list-group">
@@ -65,15 +63,15 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="deleteModalLabel">Delete Docente</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <h5 class="modal-title" id="deleteModalLabel">Deletar Docente?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Cancelar">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <form action="{{ url_for('docentes.deletar_docente', docente_id=doce.id) }}" method="POST">
-            <input class="btn btn-danger" type="submit" value="Delete">
+            <input class="btn btn-danger" type="submit" value="Deletar">
           </form>
         </div>
       </div>

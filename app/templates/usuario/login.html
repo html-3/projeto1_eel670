@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h1>{{ title }}</h1>
     <div class="content-section">
         <form method="POST" action="">
             <!-- CSRF Token -->
@@ -51,7 +50,7 @@
     <div class="border-top pt3">
         <small class="text-muted">
             Não confirmou a sua conta? <a href="{{ url_for('usuarios.reenviar_confirmacao_logout')}}">Confirmar conta</a></br>
-            Não está cadastrado? <a class="ml-2" href="{{ url_for('usuarios.cadastro') }}">Sign Up</a>
+            Não está cadastrado? <a class="ml-2" href="{{ url_for('usuarios.cadastro') }}">Inscrever-se</a>
         </small>
     </div>
 {% endblock content %}
