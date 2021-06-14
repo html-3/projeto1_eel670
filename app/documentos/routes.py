@@ -7,6 +7,10 @@ from .forms import AdicionarDocumento, AdicionarComDocumento
 from .models import Documento
 
 documentos = Blueprint('documentos', __name__)
+# pagina da lista de documentos
+# pagina do documento especifico
+# pagina para editar documentos
+# pagina (modal) para deletar documento
 
 @documentos.route('/documento', methods=['GET','POST'])
 @login_required

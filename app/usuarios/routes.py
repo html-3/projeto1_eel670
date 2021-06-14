@@ -1,12 +1,21 @@
 from flask import render_template, flash, redirect, url_for, request, Blueprint
 from app import db, bcrypt
 from datetime import datetime
-from flask_login import login_user, current_user, logout_user, login_required
+from flask_login import login_user, current_user, logout_user, login_required, login_manager
 from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed, save_picture
 from .models import Usuario, Dados
 from .forms import Login, Cadastro, UpdateAcountForm, ConfirmarEmail
 
 usuarios = Blueprint('usuarios', __name__)
+# pagina de login para usuarios
+# pagina de cadastro para usuarios
+# pagina para confirmar email
+# pagina de redirecionamento de emails nao confirmados
+# pagina para reenviar confirmacao
+# pagina de logout quando email nao esta confirmado
+# pagina de lista de usuarios (apenas admin)
+# pagina de redirecionamento logout
+# pagina de usuario em especifico
 
 @usuarios.route("/login", methods=['GET', 'POST'])
 def login():
@@ -124,39 +133,7 @@ def logout():
     logout_user()
     return redirect(url_for('main.home'))
 
-# fácil de fazer, mas sem tempo irmao
-""" @app.route('/conta/<str:nome_usuario>')
-@login_required
-@check_confirmed
-def conta(nome_usuario):
-    usuario = Doc.query.get_or_404(nome_usuario)
-
-    if not current_user.admin:
-        redirect(url_for('documento'))
-
-    form = AdicionarDoc()
-    if form.validate_on_submit():
-        doc.titulo = form.titulo.data
-        doc.autor = form.autor.data
-        doc.tipo = form.tipo.data
-        doc.formato = form.formato.data
-        doc.link = form.link.data
-        db.session.commit()
-        flash('Documento atualizado!', 'success')
-        return redirect(url_for('documento', post_id=doc.id))
-
-    elif request.method == 'GET':
-        form.titulo.data = doc.titulo
-        form.autor.data = doc.autor
-        form.tipo.data = doc.tipo
-        form.formato.data = doc.formato
-        form.link.data = doc.link
-    return render_template('main/editar_documento.html', title="Documento", form=form) """
-# <a class="nav-item nav-link" href="{{ url_for('conta') }}">Conta</a> 
-# ao parecer comentários dentro do html causam problemas quando contem código do python
-# isto pertence ao layout na parte {% if user_is_authenticated %}
-
-@usuarios.route("/minha_conta", methods = ['GET','POST'])#Página da conta do Usuario
+@usuarios.route("/minha_conta", methods = ['GET','POST']) #Página da conta do Usuario
 @login_required
 @check_confirmed
 def minha_conta():

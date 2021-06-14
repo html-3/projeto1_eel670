@@ -6,6 +6,10 @@ from .models import Docente, ComentarioDocente
 from .forms import AdicionarDocente, AdicionarComDocente, AdicionarDocente
 
 docentes = Blueprint('docentes', __name__)
+# pagina da lista de docentes
+# pagina do docente especifico
+# pagina para editar docentes
+# pagina (modal) para deletar docente
 
 @docentes.route('/docente', methods=['GET','POST'])
 @login_required
@@ -50,8 +54,6 @@ def docente_esp(docente_id):
     
     return render_template('docente/docente_esp.html', title="Docente", doce=doce, form=form, coms=coms)
 
-
-
 @docentes.route('/docente/<int:docente_id>/editar', methods=['GET','POST'])
 @login_required
 @check_confirmed
@@ -93,4 +95,3 @@ def deletar_docente(docente_id):
     db.session.commit()
     flash('Docente deletado!', 'success')
     return redirect(url_for('docentes.docente'))
-   

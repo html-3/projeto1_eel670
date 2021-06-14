@@ -7,10 +7,14 @@ from flask_login import current_user
 from re import sub
 
 class Cadastro(FlaskForm):
-    dre = StringField('DRE', validators=[
-                        DataRequired(message="Insira seu DRE!"), 
-                        Length(min=9, max=9, message="Insira apenas 9 digitos!")])
-
+    # nome
+    # nome de usuario
+    # email
+    # dre
+    # curso
+    # periodo
+    # senha
+    # foto de perfil
     nome = StringField('Nome', validators=[
                         DataRequired(message="Insira seu nome!"), 
                         Length(min=5, max=100, message="Nome muito longo/curto!")])
@@ -23,7 +27,10 @@ class Cadastro(FlaskForm):
                         DataRequired(message="Insira seu email"), 
                         Email(message="Insira um email válido!"), 
                         Length(min=5, max=50, message="Email muito longo/curto!")])
-    
+    dre = StringField('DRE', validators=[
+                        DataRequired(message="Insira seu DRE!"), 
+                        Length(min=9, max=9, message="Insira apenas 9 digitos!")])
+                    
     curso = StringField('Curso', validators=[
                         DataRequired(message="Insira seu curso!"), 
                         Length(min=5, max=50, message="Nome de curso muito longo/curto!")])
@@ -69,7 +76,10 @@ class Login(FlaskForm):
     submeter = SubmitField('Entrar')
 
 class UpdateAcountForm(FlaskForm):
-    
+    nome = StringField('Nome', validators=[
+                        DataRequired(message="Insira seu nome!"), 
+                        Length(min=5, max=100, message="Nome muito longo/curto!")])
+
     nome_usuario = StringField('Nome de usuário', validators=[
                         DataRequired(message="Insira seu nome de usuário!"), 
                         Length(min=5, max=120, message="Nome muito longo/curto!")])
@@ -78,9 +88,7 @@ class UpdateAcountForm(FlaskForm):
                         DataRequired(message="Insira seu email"), 
                         Email(message="Insira um email válido!"), 
                         Length(min=5, max=50, message="Email muito longo/curto!")])
-    nome = StringField('Nome', validators=[
-                        DataRequired(message="Insira seu nome!"), 
-                        Length(min=5, max=100, message="Nome muito longo/curto!")])
+    
 
     dre = StringField('DRE', validators=[
                         DataRequired(message="Insira seu DRE!"), 
