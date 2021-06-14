@@ -5,6 +5,8 @@ from flask_login import login_user, current_user, logout_user, login_required, l
 from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed, save_picture, upload_files
 from .models import Usuario, Dados
 from .forms import Login, Cadastro, UpdateAccountForm, ConfirmarEmail
+from threading import Thread
+import os
 
 usuarios = Blueprint('usuarios', __name__)
 # pagina de login para usuarios
