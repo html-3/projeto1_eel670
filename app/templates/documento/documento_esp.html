@@ -69,7 +69,7 @@
           </button>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
           <form action="{{ url_for('documentos.deletar_documento', documento_id=doc.id) }}" method="POST">
             <input class="btn btn-danger" type="submit" value="Confirmar">
           </form>

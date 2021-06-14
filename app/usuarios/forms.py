@@ -3,9 +3,8 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, Integ
 from wtforms.validators import DataRequired, Length, Optional, Email, EqualTo, ValidationError
 from .models import Usuario, Dados
 from flask_wtf.file import FileField, FileAllowed    
-
-# essa funcao ta certa? Nao deveria ser usada em algum lugar?
-from flask_login import current_user    
+from flask_login import current_user
+from re import sub
 
 class Cadastro(FlaskForm):
     dre = StringField('DRE', validators=[
@@ -49,8 +48,9 @@ class Cadastro(FlaskForm):
            raise ValidationError("Escolha outro nome de usuario!")
     
     def validate_dre(self,dre):
-       existe = Dados.query.filter_by(dre=dre.data).first()
-       if existe:
+        dre = int(sub("\D", "", dre.data))
+        existe = Dados.query.filter_by(dre=dre).first()
+        if existe:
            raise ValidationError("Já existe uma conta com esse DRE.")
 
     def validate_email(self,email):
@@ -95,7 +95,25 @@ class UpdateAcountForm(FlaskForm):
 
     picture = FileField('Atualizar Foto de Perfil', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Atualizar')
-
+    
+    def validate_nome_usuario(self,nome_usuario):
+        if nome_usuario.data != current_user.nome_usuario:
+            existe = Usuario.query.filter_by(nome_usuario=nome_usuario.data).first()
+            if existe:
+                raise ValidationError("Já existe uma conta com esse nome de usuario")
+        
+    def validate_email(self,email):
+        if email.data != current_user.email:
+            existe = Usuario.query.filter_by(email=email.data).first()
+            if existe:
+                raise ValidationError("Já existe uma conta com esse email.")
+    
+    def validate_dre(self,dre):
+        dre = int(sub("\D", "", dre.data))
+        if dre != current_user.dados.dre:
+            existe = Dados.query.filter_by(dre=dre).first()
+            if existe:
+                raise ValidationError("Já existe uma conta com esse DRE.")
 
 class ConfirmarEmail(FlaskForm):
 

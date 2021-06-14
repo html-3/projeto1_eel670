@@ -1,4 +1,5 @@
 from app import db, bcrypt
+from datetime import datetime
 from .usuarios.models import Usuario, Dados
 from .documentos.models import Documento, ComentarioDocumento
 from .docentes.models import Docente, ComentarioDocente
@@ -16,11 +17,11 @@ def create_dd():
             nome_usuario="tomas2",
             senha= bcrypt.generate_password_hash("123").decode('utf-8'),
             email="tomas@poli.ufrj.br",
-            confirmado=True)
+            confirmado=True,
+            registrado_data= datetime.now())
 
         db.session.add(tomas)
         db.session.add(Dados(
-            usuario_id=1,
             dre=120011111,
             nome="Tomas Tutor",
             curso="Engenharia",
@@ -32,7 +33,8 @@ def create_dd():
             senha= bcrypt.generate_password_hash("123").decode('utf-8'),
             email="admin@poli.ufrj.br",
             confirmado=True,
-            admin=True)
+            admin=True,
+            registrado_data= datetime.now())
 
         db.session.add(admin)
         db.session.add(Dados(

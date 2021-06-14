@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, Blueprint
 from app import db, bcrypt
 from datetime import datetime
 from flask_login import login_user, current_user, logout_user, login_required
-from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed, save_picture 
+from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed, save_picture
 from .models import Usuario, Dados
 from .forms import Login, Cadastro, UpdateAcountForm, ConfirmarEmail
 
@@ -70,7 +70,7 @@ def confirmar_email(token):
         flash('Conta já foi confirmada. Favor efetuar login.', 'success')
     else:
         usuario.confirmado = True
-        usuario.registrado_data = datetime.now() #Não existe. 
+        usuario.registrado_data = datetime.now()
         db.session.add(usuario)
         db.session.commit()
         flash('Sua conta foi confirmada com sucesso.', 'success')
@@ -84,6 +84,7 @@ def n_confirmado():
     return render_template('usuario/n_confirmado.html')
 
 @usuarios.route('/reenviar')
+@login_required
 def reenviar_confirmacao():
     token = gerar_token(current_user.email)
     confirmar_url = url_for('usuarios.confirmar_email', token=token, _external=True)
@@ -95,7 +96,7 @@ def reenviar_confirmacao():
 
     return redirect(url_for('usuarios.n_confirmado'))
 
-@usuarios.route('/reenviar_logout',  methods = ["GET","POST"])
+@usuarios.route('/reenviar_conf',  methods = ["GET","POST"])
 def reenviar_confirmacao_logout():
     form = ConfirmarEmail()
     if form.validate_on_submit():
@@ -156,18 +157,23 @@ def conta(nome_usuario):
 # isto pertence ao layout na parte {% if user_is_authenticated %}
 
 @usuarios.route("/minha_conta", methods = ['GET','POST'])#Página da conta do Usuario
+@login_required
+@check_confirmed
 def minha_conta():
     form = UpdateAcountForm()
     if form.validate_on_submit():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
             current_user.image_file = picture_file
-        current_user.nome_usuario = form.nome_usuario.data
+        """current_user.nome_usuario = form.nome_usuario.data
         current_user.email = form.email.data
         current_user.dados.dre = form.dre.data
         current_user.dados.periodo = form.periodo.data
         current_user.dados.curso = form.curso.data
         current_user.dados.nome = form.nome.data.lower().title()
+        current_user.dados.nome = form.nome.data"""
+        Usuario.query.filter_by(id=current_user.id).update(dict(nome_usuario = form.nome_usuario.data, email = form.email.data))
+        Dados.query.filter_by(usuario_id=current_user.id).update(dict(dre = form.dre.data, periodo = form.periodo.data, curso = form.curso.data, nome = form.nome.data.lower().title()))
         db.session.commit()
         flash('Sua conta foi atualizada','sucess')
         return redirect(url_for('usuarios.minha_conta'))
