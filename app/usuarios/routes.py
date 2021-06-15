@@ -170,3 +170,26 @@ def excluir_conta():
     db.session.commit()
     flash('Seu usuário foi excluído com sucesso! Esperamos ter ajudado, a porta da frente estará sempre aberta.', 'warning')
     return redirect(url_for('main.home'))
+
+@usuarios.route('/usuario/<int:usuario_id>', methods=['GET','POST'])
+@login_required
+@check_confirmed
+def usuario_esp(usuario_id):
+
+    user = Usuario.query.get_or_404(usuario_id)
+
+    return render_template('usuario/usuario_esp.html', title="Usuário", usuario=user)
+
+@usuarios.route('/editar_usuario/<int:usuario_id>/deletar', methods=['GET','POST'])
+@login_required
+@check_confirmed
+def deletar_usuario(usuario_id):
+    user = Usuario.query.get_or_404(usuario_id)
+
+    if not current_user.admin:
+        redirect(url_for('usuarios.lista_usuarios'))
+
+    db.session.delete(user)
+    db.session.commit()
+    flash('Usuário deletado!', 'success')
+    return redirect(url_for('usuarios.lista_usuarios'))
