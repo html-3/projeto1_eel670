@@ -1,3 +1,4 @@
+from sqlalchemy.orm import defaultload
 from app import db, login_manager
 from flask_login import UserMixin
 
@@ -11,17 +12,17 @@ class Usuario(db.Model, UserMixin):
     # id do usuario ou discente
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     # nome de perfil personalizado para o usuario
-    nome_usuario = db.Column(db.String(120), unique=True, default= 'dados.nome', nullable=False)
+    nome_usuario = db.Column(db.String(120), unique=True, default= 'dados.nome')
     # senha hash
     senha = db.Column(db.String(50), nullable=False)
     # Confirmação de email @poli.ufrj.br
     email = db.Column(db.String(50), unique=True, nullable=False)
     # check de confirmacao do email
-    confirmado =  db.Column(db.Boolean, nullable=False, default=False)
+    confirmado =  db.Column(db.Boolean, default=False)
     # confere se e um admin
     admin =  db.Column(db.Boolean, default=False)
     # imagem de perfil
-    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    image_file_link = db.Column(db.String(30), default='1fJoh2JNdbNStydU--h6To9uAgtP1gAOH')
     # data de registro do usuario
     registrado_data = db.Column(db.String(30))
 

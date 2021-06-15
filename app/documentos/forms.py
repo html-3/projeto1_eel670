@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
+from flask_wtf.file import FileField, FileAllowed 
 from wtforms.validators import DataRequired, Length, URL, Optional, ValidationError
 from .models import Documento
 
@@ -18,10 +19,7 @@ class AdicionarDocumento(FlaskForm):
                         DataRequired(message="Insira um titulo."), 
                         Length(min=3, max=3, message="Insira um formato válido (ex.: txt, pdf).")])
 
-    link = StringField('Link', validators=[
-                        DataRequired(message="Insira um link."), 
-                        URL(message="Insira um link válido.")])
-
+    arquivo = FileField('Adicionar arquivo', validators=[FileAllowed(['pdf'])])
     submeter = SubmitField('Adicionar')
 
     def validate_doc(self, titulo):

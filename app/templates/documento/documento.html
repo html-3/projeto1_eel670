@@ -12,9 +12,11 @@
         <i> {{ doc.autor }} </i> 
         </div>
         <div>
-            <a class="text-right" href="{{ url_for('docentes.docente_esp', docente_id=doc.dono_id) }}">Docente</a> -   
+            {% if doc.dono_id %}
+            <a class="text-right" href="{{ url_for('docentes.docente_esp', docente_id=doc.dono_id) }}">Docente</a> -
+            {% endif %}   
             <a class="text-right" href="{{ url_for('documentos.documento_esp', documento_id=doc.id) }}">Acessar</a> -
-            <a class="text-right" href="{{ doc.link }}">Download</a>
+            <a class="text-right" href="http://drive.google.com/uc?export=view&id={{ doc.file_link }}">Download</a>
         </div>
         
     </li>
@@ -98,16 +100,12 @@
             </div>
 
             <div class="form-group">
-                {{ form.link.label(class="form-control-label") }}
-                {% if form.link.errors %}
-                    {{ form.link(class="form-control form-control-lg is-invalid") }}
-                    <div class="invalid-feedback">
-                        {% for error in form.link.errors %}
-                            <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    {{ form.link(class="form-control form-control-lg") }}
+                {{ form.arquivo.label() }}
+                {{ form.arquivo(class="form-control-file") }}
+                {% if form.arquivo.errors %}
+                    {% for error in form.arquivo.errors %}
+                        <span class="text-danger">{{ error }}</span></br>
+                    {% endfor %}
                 {% endif %}
             </div>
         </fieldset>

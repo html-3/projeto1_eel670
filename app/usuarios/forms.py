@@ -101,7 +101,7 @@ class UpdateAccountForm(FlaskForm):
     periodo = IntegerField('Período', validators=[
                         DataRequired(message="Insira seu período!")])
 
-    picture = FileField('Atualizar Foto de Perfil', validators=[FileAllowed(['jpg', 'png'])])
+    picture = FileField('Atualizar Foto de Perfil*', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Atualizar')
     
     def validate_nome_usuario(self,nome_usuario):
