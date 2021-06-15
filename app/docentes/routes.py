@@ -4,6 +4,7 @@ from flask_login import current_user, login_required
 from app.usuarios.utilidades import check_confirmed 
 from .models import Docente, ComentarioDocente
 from .forms import AdicionarDocente, AdicionarComDocente, AdicionarDocente
+from app.documentos.models import Documento
 
 docentes = Blueprint('docentes', __name__)
 # pagina da lista de docentes
@@ -17,7 +18,7 @@ docentes = Blueprint('docentes', __name__)
 def docente():
     page = request.args.get('page', 1, type=int)
     doces = Docente.query.order_by(Docente.id).paginate(page=page, per_page=5)
-
+    
     form = AdicionarDocente()
     if form.validate_on_submit():
         doce = Docente(
@@ -37,7 +38,10 @@ def docente():
 @login_required
 @check_confirmed
 def docente_esp(docente_id):
+    page = request.args.get('page', 1, type=int)
+
     doce = Docente.query.get_or_404(docente_id)
+    docs = Documento.query.filter_by(dono_id=docente_id).paginate(page=page, per_page=5)
 
     coms = ComentarioDocente.query.filter_by(doce_id=docente_id).all()
     form = AdicionarComDocente()
@@ -52,7 +56,7 @@ def docente_esp(docente_id):
         flash('Comentário feito com sucesso!', 'success')
         return redirect(url_for('docentes.docente_esp', docente_id=doce.id))
     
-    return render_template('docente/docente_esp.html', title="Docente", doce=doce, form=form, coms=coms)
+    return render_template('docente/docente_esp.html', title="Docente", doce=doce, form=form, coms=coms, docs=docs)
 
 @docentes.route('/docente/<int:docente_id>/editar', methods=['GET','POST'])
 @login_required

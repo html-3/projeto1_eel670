@@ -13,7 +13,6 @@
       <div>   
       <a class="text-right" href="{{ doce.link_ufrj }}">Acessar pagina</a>
       </div>
-
     </li>
   </ul>
 <br>
@@ -23,6 +22,38 @@
   <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Deletar</button>
 </div>
 {% endif %}
+<br>
+  {% if docs.items %}
+    <legend class="border-bottom mb-4">Documentos</legend>
+    {% for doc in docs.items %}
+    <li class="list-group-item list-group-item-light d-flex justify-content-between">
+      <div>
+        {{ doc.titulo }} - 
+        <i> {{ doc.autor }} </i> 
+      </div>
+      <div>
+        <a class="text-right" href="{{ url_for('docentes.docente_esp', docente_id=doc.dono_id) }}">Docente</a> -   
+        <a class="text-right" href="{{ url_for('documentos.documento_esp', documento_id=doc.id) }}">Acessar</a> -
+        <a class="text-right" href="{{ doc.link }}">Download</a>
+    </div>
+    </li>
+    {% endfor %}
+    &nbsp;&nbsp;&nbsp;
+    <div class="text-center">
+      {% for page_num in docs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+          {% if docs.page == page_num %}
+            <a class="btn btn-info mb-4" href="{{ url_for('docentes.docente_esp', docente_id=doce.id, page=page_num) }}">{{ page_num }}</a>
+          {% else %}
+            <a class="btn btn-outline-info mb-4" href="{{ url_for('docentes.docente_esp', docente_id=doce.id, page=page_num) }}">{{ page_num }}</a>
+          {% endif %}
+        {% else %}
+        {% endif %}
+      {% endfor %}    
+    </div>
+  {% else %}
+    <legend class="border-bottom mb-4">Documentos - <i>Vazio!</i> </legend>
+  {% endif %}
 <br>
 <legend class="border-bottom mb-4">Comentários</legend>
 {% for com in coms %}
@@ -77,5 +108,4 @@
       </div>
     </div>
   </div>
-
 {% endblock %}
