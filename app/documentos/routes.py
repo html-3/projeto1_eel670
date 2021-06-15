@@ -82,11 +82,6 @@ def editar_documento(documento_id):
         
         docente = Docente.query.filter_by(nome=form.autor.data).first()
         doc.dono = docente
-        """doc.titulo = form.titulo.data.lower().title()
-        doc.autor = form.autor.data.lower().title()
-        doc.tipo = form.tipo.data.lower().title()
-        doc.formato = form.formato.data.upper()
-        doc.link = form.link.data"""
         if form.arquivo.data:
             file = save_file(form.picture.data)
             file_path = "app/static/file_storage/" + file

@@ -8,8 +8,6 @@ from time import sleep
 import os, secrets
 
 def upload_files(file_path, folder_id):
-    #'1rXtdkLm3jsrTqpv4Km_mzGmYOWoBjoph' -> ID user_images' folder
-    #'1ng1u8Kgh39ZOhIas8Sard8X3AaezH2Yt' -> ID documento's folder
     gfile = drive.CreateFile({'parents': [{'id':f'{folder_id}'}]})
     gfile.SetContentFile(file_path)
     gfile.Upload()

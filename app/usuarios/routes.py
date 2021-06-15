@@ -143,8 +143,6 @@ def minha_conta():
         if form.picture.data:
             picture_file = save_file(form.picture.data)
             picture_path = "app/static/file_storage/" + picture_file
-            """link = change_image(picture_path, '1rXtdkLm3jsrTqpv4Km_mzGmYOWoBjoph')
-            current_user.image_file_link = link"""
             with ThreadPoolExecutor(max_workers=1) as executor:
                 future = executor.submit(change_file, picture_path, '1rXtdkLm3jsrTqpv4Km_mzGmYOWoBjoph')
                 link = future.result()
@@ -167,8 +165,6 @@ def minha_conta():
 @login_required
 @check_confirmed
 def excluir_conta():
-    usuario = Dados.query.filter_by(usuario_id=current_user.dados.usuario_id).first()
-    db.session.delete(usuario)
     usuario = Usuario.query.filter_by(id=current_user.id).first()
     db.session.delete(usuario)
     db.session.commit()
