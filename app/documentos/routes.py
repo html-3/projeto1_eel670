@@ -1,7 +1,9 @@
+from app.docentes.models import Docente
 from flask import render_template, flash, redirect, url_for, request, Blueprint
 from app import db
 from flask_login import current_user, login_required
-from app.usuarios.utilidades import check_confirmed 
+from concurrent.futures import ThreadPoolExecutor
+from app.usuarios.utilidades import check_confirmed, save_file, change_file
 from .models import ComentarioDocumento, Documento
 from .forms import AdicionarDocumento, AdicionarComDocumento
 from .models import Documento
@@ -22,15 +24,24 @@ def documento():
 
     form = AdicionarDocumento()
     if form.validate_on_submit():
+
         doc = Documento(
                         titulo=form.titulo.data.lower().title(), 
                         autor=form.autor.data.lower().title(),
                         tipo=form.tipo.data.lower().title(), 
                         formato=form.formato.data.upper(),  
-                        link=form.link.data,
                         dono=Docente.query.filter_by(nome=form.dono.data).first())
+
         db.session.add(doc)
         db.session.commit()
+        if form.arquivo.data:
+            file = save_file(form.arquivo.data)
+            file_path = "app/static/file_storage/" + file
+            with ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(change_file, file_path, '1ng1u8Kgh39ZOhIas8Sard8X3AaezH2Yt')
+                link = future.result()
+                Documento.query.filter_by(id=doc.id).update(dict(file_link=link))
+            db.session.commit()
 
         flash('Documento cadastrado com sucesso!', 'success')
         return redirect(url_for('documentos.documento'))
@@ -68,20 +79,30 @@ def editar_documento(documento_id):
 
     form = AdicionarDocumento()
     if form.validate_on_submit():
+        if form.arquivo.data:
+            file = save_file(form.picture.data)
+            file_path = "app/static/file_storage/" + file
+            with ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(change_file, file_path, '1ng1u8Kgh39ZOhIas8Sard8X3AaezH2Yt')
+                link = future.result()
+
         doc.titulo = form.titulo.data.lower().title()
         doc.autor = form.autor.data.lower().title()
         doc.tipo = form.tipo.data.lower().title()
         doc.formato = form.formato.data.upper()
-        doc.link = form.link.data
-        doc.dono=Docente.query.filter_by(nome=form.dono.data).first()
+        doc.file_link = link
+        doc.dono = Docente.query.filter_by(nome=form.dono.data).first()
         # problema por suposto "immutable dict", revertido ao metodo anterior
-        """Documento.query.filter_by(id=documento_id).update(dict(
+        """
+        Documento.query.filter_by(id=current_user.id).update(dict(file_link=link))
+        Documento.query.filter_by(id=documento_id).update(dict(
                                     titulo = form.titulo.data.lower().title(), 
                                     autor = form.autor.data.lower().title(), 
                                     tipo=form.tipo.data.lower().title(), 
                                     formato=form.formato.data.upper(), 
                                     link=form.link.data,
-                                    dono=Docente.query.filter_by(nome=form.dono.data).first()))"""
+                                    dono=Docente.query.filter_by(nome=form.dono.data).first()))
+        """
         db.session.commit()
         flash('Documento atualizado!', 'success')
         return redirect(url_for('documentos.documento', post_id=doc.id))
@@ -91,7 +112,6 @@ def editar_documento(documento_id):
         form.autor.data = doc.autor
         form.tipo.data = doc.tipo
         form.formato.data = doc.formato
-        form.link.data = doc.link
     return render_template('documento/editar_documento.html', title="Documento", form=form)
 
 @documentos.route('/editar_documento/<int:documento_id>/deletar', methods=['GET','POST'])

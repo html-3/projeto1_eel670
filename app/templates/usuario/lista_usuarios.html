@@ -11,6 +11,9 @@
         {{ usuario.nome_usuario }} - 
         <i> {{ usuario.email }} </i> 
         </div>
+        <div>
+          <a class="text-right" href="{{ url_for('usuarios.usuario_esp', usuario_id=usuario.id) }}">Acessar</a>
+        </div> 
     </li>
     {% endfor %}
     </ul> 

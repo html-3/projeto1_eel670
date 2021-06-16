@@ -69,21 +69,21 @@ def create_dd():
                 autor="Diego Dutra",
                 tipo="Prova",
                 formato="PDF",
-                link="https://drive.google.com/file/d/1fq9z9JCfWbET0nPIqTX5zJkvEOOVEr-b/view",
+                file_link="1fq9z9JCfWbET0nPIqTX5zJkvEOOVEr-b",
                 dono=diego))
             db.session.add(Documento(
                 titulo="Prova 2 Circuitos Lógicos 2020.2",
                 autor="Diego Dutra",
                 tipo="Prova",
                 formato="PDF",
-                link="https://drive.google.com/file/d/1G5nGExWy_eQzpxsCi1CabjX6aByZGbTW/view",
+                file_link="1G5nGExWy_eQzpxsCi1CabjX6aByZGbTW",
                 dono=diego))
             db.session.add(Documento(
                 titulo="Lista 1 Cálculo II 2020.2",
                 autor="Departamento de Matemática",
                 tipo="Lista",
                 formato="PDF",
-                link="https://drive.google.com/file/d/1mrnkQG59SzJanBe9tGCbmGvobO1meMw2/view",
+                file_link="1mrnkQG59SzJanBe9tGCbmGvobO1meMw2",
                 dono=monica))
 
     db.session.commit()

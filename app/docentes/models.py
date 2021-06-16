@@ -17,18 +17,18 @@ class Docente(db.Model):
     link_ufrj = db.Column(db.String(100))
 
     # comentarios associados a pagina do docente
-    comentarios = db.relationship('ComentarioDocente', backref=db.backref('docen', lazy=True))
+    comentarios = db.relationship('ComentarioDocente', cascade="all, delete", backref='docen', lazy=True)
     # documentos requeridos ou usados pelo docente
-    documentos = db.relationship('Documento', backref=db.backref('dono', lazy=True))
+    documentos = db.relationship('Documento', backref='dono', lazy=True)
 
     def __repr__(self):
-        if self.siape == 1000000:
-            return f"{self.nome}; Email: {self.email}; Departamento de {self.dep}"
+        if (self.siape == 1000000):
+            return f"{self.id} - {self.nome}; Email: {self.email}; Departamento de  {self.dep}"
         return f"{self.siape} - {self.nome}, Email: {self.email}; Depart.: {self.dep}"
 
 class ComentarioDocente(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    doce_id = db.Column(db.Integer, db.ForeignKey('docente.id'), nullable=False)
+    doce_id = db.Column(db.Integer, db.ForeignKey('docente.id'))
     
      # nome do usuario do comentador
     nome_usuario = db.Column(db.String(120), nullable=False)

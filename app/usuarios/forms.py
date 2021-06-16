@@ -6,6 +6,23 @@ from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
 from re import sub
 
+lista_cursos = ["Escolha um dos cursos da Escola Politécnica da UFRJ...",
+                "Engenharia Ambiental",
+                "Engenharia Civil",
+                "Engenharia de Computação e Informação",
+                "Engenharia de Controle e Automação",
+                "Engenharia de Materiais",
+                "Engenharia de Petróleo",
+                "Engenharia de Produção",
+                "Engenharia Elétrica",
+                "Engenharia Eletrônica e de Computação",
+                "Engenharia Matemática",
+                "Engenharia Mecânica",
+                "Engenharia Metalúrgica",
+                "Engenharia Naval e Oceânica",
+                "Engenharia Nuclear",
+                "Nanotecnologia"]
+
 class Cadastro(FlaskForm):
     # nome
     # nome de usuario
@@ -31,24 +48,6 @@ class Cadastro(FlaskForm):
                         DataRequired(message="Insira seu DRE!"), 
                         Length(min=9, max=9, message="Insira apenas 9 digitos!")])
 
-
-    lista_cursos = ["Escolha um dos cursos da Escola Politécnica da UFRJ...",
-                    "Engenharia Ambiental",
-                    "Engenharia Civil",
-                    "Engenharia de Computação e Informação",
-                    "Engenharia de Controle e Automação",
-                    "Engenharia de Materiais",
-                    "Engenharia de Petróleo",
-                    "Engenharia de Produção",
-                    "Engenharia Elétrica",
-                    "Engenharia Eletrônica e de Computação",
-                    "Engenharia Matemática",
-                    "Engenharia Mecânica",
-                    "Engenharia Metalúrgica",
-                    "Engenharia Naval e Oceânica",
-                    "Engenharia Nuclear",
-                    "Nanotecnologia"]
-
     curso = SelectField('Curso', choices=lista_cursos, validators=[
                         DataRequired(message="Insira seu curso!"), 
                         Length(min=5, max=37, message="Escolha um curso!")])
@@ -64,7 +63,6 @@ class Cadastro(FlaskForm):
                         EqualTo('senha', message="Suas senhas nao sao iguais!")])
     
     submeter = SubmitField('Cadastrar')
-
 
     # confirma se já existe na db ou nao
     def validate_nome_usuario(self,nome_usuario):
@@ -111,23 +109,6 @@ class UpdateAccountForm(FlaskForm):
                         DataRequired(message="Insira seu DRE!"), 
                         Length(min=9, max=9, message="Insira apenas 9 digitos!")])
 
-    lista_cursos = ["Escolha um dos cursos da Escola Politécnica da UFRJ...",
-                    "Engenharia Ambiental",
-                    "Engenharia Civil",
-                    "Engenharia de Computação e Informação",
-                    "Engenharia de Controle e Automação",
-                    "Engenharia de Materiais",
-                    "Engenharia de Petróleo",
-                    "Engenharia de Produção",
-                    "Engenharia Elétrica",
-                    "Engenharia Eletrônica e de Computação",
-                    "Engenharia Matemática",
-                    "Engenharia Mecânica",
-                    "Engenharia Metalúrgica",
-                    "Engenharia Naval e Oceânica",
-                    "Engenharia Nuclear",
-                    "Nanotecnologia"]
-
     curso = SelectField('Curso', choices=lista_cursos, validators=[
                         DataRequired(message="Insira seu curso!"), 
                         Length(min=5, max=37, message="Escolha um curso!")])
@@ -135,7 +116,7 @@ class UpdateAccountForm(FlaskForm):
     periodo = IntegerField('Período', validators=[
                         DataRequired(message="Insira seu período!")])
 
-    picture = FileField('Atualizar Foto de Perfil', validators=[FileAllowed(['jpg', 'png'])])
+    picture = FileField('Atualizar Foto de Perfil*', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Atualizar')
     
     def validate_nome_usuario(self,nome_usuario):

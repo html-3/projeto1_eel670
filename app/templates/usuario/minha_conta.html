@@ -3,7 +3,7 @@
 {% block content %}
     <div class="content-section">
       <div class="media">
-        <img class="rounded-circle account-img" src="{{ image_file }}"> <!--Trazendo a imagem de perfil do usuário atualizada ao template-->
+        <img class="rounded-circle account-img" src="http://drive.google.com/uc?export=view&id={{ current_user.image_file_link }}"> <!--Trazendo a imagem de perfil do usuário atualizada ao template-->
         <div class="media-body">
           <h3>{{ current_user.dados.nome }}</h3> <!--Trazendo o username do usuário atualizada ao template-->
           <p class="text-secondary">{{ current_user.nome_usuario }} - {{ current_user.email }}</p> <!--Trazendo o email do usuário atualizado ao template-->
@@ -115,6 +115,7 @@
               <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Excluir Conta</button>
           </div>
       </form>
+      <p style="padding: 15px 0 10px 0; font-size: 13px;">*O processo de mudança de foto pode levar alguns instantes. Sinta-se livre para continuar utilizando o site enquanto o processo é concluido.</p>
     </div>
      <!-- Modal -->
      <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -127,7 +128,7 @@
               </button>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
               <form action="{{ url_for('usuarios.excluir_conta')}}" method="POST">
                 <input class="btn btn-danger" type="submit" value="Deletar">
               </form>

@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField
-from wtforms.validators import DataRequired, Length, URL, Optional, ValidationError, Required
+from flask_wtf.file import FileField, FileAllowed 
+from wtforms.validators import DataRequired, Length, Optional, ValidationError, Required#, URL
 from .models import Documento
 from app import db
 from app.docentes.models import Docente
@@ -10,7 +11,6 @@ lista_tipos = ["Escolha um tipo...","Lista","Prova","Livro"]
 # isto eh ilegivel mas evita que uma lista sqlalchemy.util._collections.result seja criada :)
 lista_donos_crua = db.session.query(Docente.nome).all()
 lista_donos = [i for lista_nome in [list(nome) for nome in lista_donos_crua] for i in lista_nome]
-#lista_donos=[1,2]
 
 class AdicionarDocumento(FlaskForm):
     titulo = StringField('Título', validators=[
@@ -27,13 +27,10 @@ class AdicionarDocumento(FlaskForm):
                         DataRequired(message="Insira um formato."), 
                         Length(min=3, max=3, message="Insira um formato válido (ex.: txt, pdf).")])
 
-    link = StringField('Link', validators=[
-                        DataRequired(message="Insira um link."), 
-                        URL(message="Insira um link válido.")])
-
     dono = SelectField('Dono (Docente)', choices=lista_donos, validators=[
                         Required(message="Insira o docente que usa este documento.")])
 
+    arquivo = FileField('Adicionar arquivo', validators=[FileAllowed(['pdf'])])
     submeter = SubmitField('Adicionar')
 
     def validate_doc(self, titulo):

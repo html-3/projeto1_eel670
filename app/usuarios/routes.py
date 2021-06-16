@@ -1,12 +1,11 @@
 from flask import render_template, flash, redirect, url_for, request, Blueprint
-from app import db, bcrypt
+from app import db, bcrypt, drive
 from datetime import datetime
 from flask_login import login_user, current_user, logout_user, login_required, login_manager
-from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed, save_picture, upload_files
+from .utilidades import gerar_token, confirmar_token, enviar_email, check_confirmed, save_file, change_file
 from .models import Usuario, Dados
 from .forms import Login, Cadastro, UpdateAccountForm, ConfirmarEmail
-from threading import Thread
-import os
+from concurrent.futures import ThreadPoolExecutor
 
 usuarios = Blueprint('usuarios', __name__)
 # pagina de login para usuarios
@@ -142,12 +141,13 @@ def minha_conta():
     form = UpdateAccountForm()
     if form.validate_on_submit():
         if form.picture.data:
-            picture_file = save_picture(form.picture.data)
-            picture_path = "app/static/profile_pics/"+picture_file
-            current_user.image_file = picture_file
-            send = Thread(target=upload_files, args=(picture_path,), daemon=True)
-            send.start()
-        Usuario.query.filter_by(id=current_user.id).update(dict(nome_usuario = form.nome_usuario.data, email = form.email.data))
+            picture_file = save_file(form.picture.data)
+            picture_path = "app/static/file_storage/" + picture_file
+            with ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(change_file, picture_path, '1rXtdkLm3jsrTqpv4Km_mzGmYOWoBjoph')
+                link = future.result()
+                Usuario.query.filter_by(id=current_user.id).update(dict(image_file_link=link))
+        Usuario.query.filter_by(id=current_user.id).update(dict(nome_usuario = form.nome_usuario.data, email = form.email.data,))
         Dados.query.filter_by(usuario_id=current_user.id).update(dict(dre = form.dre.data, periodo = form.periodo.data, curso = form.curso.data, nome = form.nome.data.lower().title()))
         db.session.commit()
         flash('Sua conta foi atualizada','sucess')
@@ -159,18 +159,37 @@ def minha_conta():
         form.periodo.data = current_user.dados.periodo
         form.curso.data = current_user.dados.curso
         form.nome.data = current_user.dados.nome
-    image_file = url_for('static', filename='profile_pics/' + current_user.image_file) #atualiza a imagem de perfil do usuario
-    return render_template('usuario/minha_conta.html', title='Minha Conta', 
-                            image_file=image_file, form = form) #chama o template da conta
+    return render_template('usuario/minha_conta.html', title='Minha Conta', form = form) #chama o template da conta
 
 @usuarios.route('/minha_conta/deletar', methods=['GET','POST'])
 @login_required
 @check_confirmed
 def excluir_conta():
-    usuario = Dados.query.filter_by(usuario_id=current_user.dados.usuario_id).first()
-    db.session.delete(usuario)
     usuario = Usuario.query.filter_by(id=current_user.id).first()
     db.session.delete(usuario)
     db.session.commit()
     flash('Seu usuário foi excluído com sucesso! Esperamos ter ajudado, a porta da frente estará sempre aberta.', 'warning')
     return redirect(url_for('main.home'))
+
+@usuarios.route('/usuario/<int:usuario_id>', methods=['GET','POST'])
+@login_required
+@check_confirmed
+def usuario_esp(usuario_id):
+
+    user = Usuario.query.get_or_404(usuario_id)
+
+    return render_template('usuario/usuario_esp.html', title="Usuário", usuario=user)
+
+@usuarios.route('/editar_usuario/<int:usuario_id>/deletar', methods=['GET','POST'])
+@login_required
+@check_confirmed
+def deletar_usuario(usuario_id):
+    user = Usuario.query.get_or_404(usuario_id)
+
+    if not current_user.admin:
+        redirect(url_for('usuarios.lista_usuarios'))
+
+    db.session.delete(user)
+    db.session.commit()
+    flash('Usuário deletado!', 'success')
+    return redirect(url_for('usuarios.lista_usuarios'))

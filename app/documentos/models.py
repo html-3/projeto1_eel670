@@ -1,3 +1,4 @@
+from sqlalchemy.orm import defaultload
 from app import db
 from datetime import datetime
 
@@ -14,19 +15,18 @@ class Documento(db.Model):
     # PDF, PNG, DOC, MD, TXT, etc.
     formato = db.Column(db.String(3), nullable=False)
     # link do documento no drive
-    link = db.Column(db.String(150), nullable=False)
-
+    file_link = db.Column(db.String(30), default='1yuuUDqEpsB8O_3TIEMrqVy3EbGE2cRdT')
     # comentarios associados a um documento
-    comentarios = db.relationship('ComentarioDocumento', backref=db.backref('docu', lazy=True))
+    comentarios = db.relationship('ComentarioDocumento', cascade="all,delete", backref='docu', lazy=True)
     # docente que requer esse livro
     dono_id = db.Column(db.Integer, db.ForeignKey('docente.id'))
 
     def __repr__(self):
-        return f"{self.id} - {self.titulo}.{self.formato} ({self.autor}): {self.link})"
+        return f"{self.id} - {self.titulo}.{self.formato} ({self.autor}))"
 
 class ComentarioDocumento(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    doc_id = db.Column(db.Integer, db.ForeignKey('documento.id'), nullable=False)
+    doc_id = db.Column(db.Integer, db.ForeignKey('documento.id'))
     
     # nome do usuario do comentador
     nome_usuario = db.Column(db.String(120), nullable=False)
