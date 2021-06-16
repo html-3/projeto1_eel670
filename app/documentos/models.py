@@ -15,7 +15,7 @@ class Documento(db.Model):
     # PDF, PNG, DOC, MD, TXT, etc.
     formato = db.Column(db.String(3), nullable=False)
     # link do documento no drive
-    file_link = db.Column(db.String(30), default='1yuuUDqEpsB8O_3TIEMrqVy3EbGE2cRdT')
+    file_link = db.Column(db.String(30))
 
     # comentarios associados a um documento
     comentarios = db.relationship('ComentarioDocumento', cascade="all,delete", backref='docu', lazy=True)

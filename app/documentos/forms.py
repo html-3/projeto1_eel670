@@ -19,7 +19,8 @@ class AdicionarDocumento(FlaskForm):
                         DataRequired(message="Insira um titulo."), 
                         Length(min=3, max=3, message="Insira um formato válido (ex.: txt, pdf).")])
 
-    arquivo = FileField('Adicionar arquivo', validators=[FileAllowed(['pdf'])])
+    arquivo = FileField('Adicionar arquivo', validators=[FileAllowed(['pdf']),
+                                                        DataRequired(message="Favor inserir um documento válido.")])
     submeter = SubmitField('Adicionar')
 
     def validate_doc(self, titulo):
