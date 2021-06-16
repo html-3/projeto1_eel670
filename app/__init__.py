@@ -19,10 +19,26 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 bcrypt = Bcrypt(app)
+
+# API com google drive
+# autorizacao do google
 gauth = GoogleAuth()
+# https://stackoverflow.com/questions/24419188/automating-pydrive-verification-process/24542604#24542604
+# tenta carregar as credenciais do google
+gauth.LoadCredentialsFile("gauth_credenciais.txt")
+if gauth.credentials is None:
+    # autentificar caso nao exista
+    gauth.LocalWebserverAuth()
+elif gauth.access_token_expired:
+    # refresh se elas expiraram
+    gauth.Refresh()
+else:
+    # inicializar caso existam
+    gauth.Authorize()
+# salvar as crecencias do diretorio
+gauth.SaveCredentialsFile("gauth_credenciais.txt")
 gauth.LocalWebserverAuth()
 drive = GoogleDrive(gauth)
-
 
 # importar os Blueprints de cada parte do codigo
 from .main.routes import main

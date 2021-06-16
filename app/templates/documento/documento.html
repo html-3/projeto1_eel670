@@ -68,7 +68,6 @@
                     {{ form.autor(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
-
             <div class="form-group">
                 {{ form.tipo.label(class="form-control-label") }}
                 {% if form.tipo.errors %}
@@ -108,6 +107,19 @@
                     </div>
                 {% else %}
                     {{ form.link(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.dono.label(class="form-control-label") }}
+                {% if form.dono.errors %}
+                    {{ form.dono(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.dono.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.dono(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
         </fieldset>

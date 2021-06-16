@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField
 from wtforms.validators import DataRequired, Length, Optional, Email, EqualTo, ValidationError
 from .models import Usuario, Dados
 from flask_wtf.file import FileField, FileAllowed    
@@ -30,10 +30,28 @@ class Cadastro(FlaskForm):
     dre = StringField('DRE', validators=[
                         DataRequired(message="Insira seu DRE!"), 
                         Length(min=9, max=9, message="Insira apenas 9 digitos!")])
-                    
-    curso = StringField('Curso', validators=[
+
+
+    lista_cursos = ["Escolha um dos cursos da Escola Politécnica da UFRJ...",
+                    "Engenharia Ambiental",
+                    "Engenharia Civil",
+                    "Engenharia de Computação e Informação",
+                    "Engenharia de Controle e Automação",
+                    "Engenharia de Materiais",
+                    "Engenharia de Petróleo",
+                    "Engenharia de Produção",
+                    "Engenharia Elétrica",
+                    "Engenharia Eletrônica e de Computação",
+                    "Engenharia Matemática",
+                    "Engenharia Mecânica",
+                    "Engenharia Metalúrgica",
+                    "Engenharia Naval e Oceânica",
+                    "Engenharia Nuclear",
+                    "Nanotecnologia"]
+
+    curso = SelectField('Curso', choices=lista_cursos, validators=[
                         DataRequired(message="Insira seu curso!"), 
-                        Length(min=5, max=50, message="Nome de curso muito longo/curto!")])
+                        Length(min=5, max=37, message="Escolha um curso!")])
 
     periodo = IntegerField('Período', validators=[
                         DataRequired(message="Insira seu período!")])
@@ -89,14 +107,30 @@ class UpdateAccountForm(FlaskForm):
                         Email(message="Insira um email válido!"), 
                         Length(min=5, max=50, message="Email muito longo/curto!")])
     
-
     dre = StringField('DRE', validators=[
                         DataRequired(message="Insira seu DRE!"), 
                         Length(min=9, max=9, message="Insira apenas 9 digitos!")])
 
-    curso = StringField('Curso', validators=[
+    lista_cursos = ["Escolha um dos cursos da Escola Politécnica da UFRJ...",
+                    "Engenharia Ambiental",
+                    "Engenharia Civil",
+                    "Engenharia de Computação e Informação",
+                    "Engenharia de Controle e Automação",
+                    "Engenharia de Materiais",
+                    "Engenharia de Petróleo",
+                    "Engenharia de Produção",
+                    "Engenharia Elétrica",
+                    "Engenharia Eletrônica e de Computação",
+                    "Engenharia Matemática",
+                    "Engenharia Mecânica",
+                    "Engenharia Metalúrgica",
+                    "Engenharia Naval e Oceânica",
+                    "Engenharia Nuclear",
+                    "Nanotecnologia"]
+
+    curso = SelectField('Curso', choices=lista_cursos, validators=[
                         DataRequired(message="Insira seu curso!"), 
-                        Length(min=5, max=50, message="Nome de curso muito longo/curto!")])
+                        Length(min=5, max=37, message="Escolha um curso!")])
 
     periodo = IntegerField('Período', validators=[
                         DataRequired(message="Insira seu período!")])

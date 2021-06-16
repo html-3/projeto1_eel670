@@ -4,3 +4,4 @@ config.py
 /site.db-journal
 /app/static/profile_pics/*
 !/app/static/profile_pics/default.jpg
+gauth_credenciais.txt

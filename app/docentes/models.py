@@ -22,8 +22,8 @@ class Docente(db.Model):
     documentos = db.relationship('Documento', backref=db.backref('dono', lazy=True))
 
     def __repr__(self):
-        if self.siape == self.siape.default:
-            return f"{self.id} - {self.nome}, Email: {self.email}; Depart.: {self.dep}"
+        if self.siape == 1000000:
+            return f"{self.nome}; Email: {self.email}; Departamento de {self.dep}"
         return f"{self.siape} - {self.nome}, Email: {self.email}; Depart.: {self.dep}"
 
 class ComentarioDocente(db.Model):

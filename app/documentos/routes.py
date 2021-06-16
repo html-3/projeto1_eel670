@@ -5,6 +5,7 @@ from app.usuarios.utilidades import check_confirmed
 from .models import ComentarioDocumento, Documento
 from .forms import AdicionarDocumento, AdicionarComDocumento
 from .models import Documento
+from app.docentes.models import Docente
 
 documentos = Blueprint('documentos', __name__)
 # pagina da lista de documentos
@@ -26,7 +27,8 @@ def documento():
                         autor=form.autor.data.lower().title(),
                         tipo=form.tipo.data.lower().title(), 
                         formato=form.formato.data.upper(),  
-                        link=form.link.data)
+                        link=form.link.data,
+                        dono=Docente.query.filter_by(nome=form.dono.data).first())
         db.session.add(doc)
         db.session.commit()
 
@@ -66,12 +68,20 @@ def editar_documento(documento_id):
 
     form = AdicionarDocumento()
     if form.validate_on_submit():
-        """doc.titulo = form.titulo.data.lower().title()
+        doc.titulo = form.titulo.data.lower().title()
         doc.autor = form.autor.data.lower().title()
         doc.tipo = form.tipo.data.lower().title()
         doc.formato = form.formato.data.upper()
-        doc.link = form.link.data"""
-        Documento.query.filter_by(id=documento_id).update(dict(titulo = form.titulo.data.lower().title(), autor = form.autor.data.lower().title(), tipo=form.tipo.data.lower().title(), formato=form.formato.data.upper(), link=form.link.data))
+        doc.link = form.link.data
+        doc.dono=Docente.query.filter_by(nome=form.dono.data).first()
+        # problema por suposto "immutable dict", revertido ao metodo anterior
+        """Documento.query.filter_by(id=documento_id).update(dict(
+                                    titulo = form.titulo.data.lower().title(), 
+                                    autor = form.autor.data.lower().title(), 
+                                    tipo=form.tipo.data.lower().title(), 
+                                    formato=form.formato.data.upper(), 
+                                    link=form.link.data,
+                                    dono=Docente.query.filter_by(nome=form.dono.data).first()))"""
         db.session.commit()
         flash('Documento atualizado!', 'success')
         return redirect(url_for('documentos.documento', post_id=doc.id))

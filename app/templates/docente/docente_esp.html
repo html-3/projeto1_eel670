@@ -32,7 +32,6 @@
         <i> {{ doc.autor }} </i> 
       </div>
       <div>
-        <a class="text-right" href="{{ url_for('docentes.docente_esp', docente_id=doc.dono_id) }}">Docente</a> -   
         <a class="text-right" href="{{ url_for('documentos.documento_esp', documento_id=doc.id) }}">Acessar</a> -
         <a class="text-right" href="{{ doc.link }}">Download</a>
     </div>
