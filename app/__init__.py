@@ -18,6 +18,10 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 bcrypt = Bcrypt(app)
+gauth = GoogleAuth()
+gauth.LocalWebserverAuth()
+drive = GoogleDrive(gauth)
+
 
 # para evitar problemas na criacao da database com as rotas, isto foi colocado aqui
 from app.dummy_data import create_dd
@@ -28,7 +32,7 @@ create_dd()
 gauth = GoogleAuth()
 # https://stackoverflow.com/questions/24419188/automating-pydrive-verification-process/24542604#24542604
 # tenta carregar as credenciais do google
-"""gauth.LoadCredentialsFile("gauth_credenciais.txt")
+gauth.LoadCredentialsFile("gauth_credenciais.txt")
 if gauth.credentials is None:
     # autentificar caso nao exista
     gauth.LocalWebserverAuth()
@@ -39,7 +43,7 @@ else:
     # inicializar caso existam
     gauth.Authorize()
 # salvar as crecencias do diretorio
-gauth.SaveCredentialsFile("gauth_credenciais.txt")"""
+gauth.SaveCredentialsFile("gauth_credenciais.txt")
 gauth.LocalWebserverAuth()
 drive = GoogleDrive(gauth)
 
