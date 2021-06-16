@@ -38,11 +38,14 @@ def documento():
             file = save_file(form.arquivo.data)
             file_path = "app/static/file_storage/" + file
             with ThreadPoolExecutor(max_workers=1) as executor:
-                future = executor.submit(change_file, file_path, '1ng1u8Kgh39ZOhIas8Sard8X3AaezH2Yt')
-                link = future.result()
-                Documento.query.filter_by(id=doc.id).update(dict(file_link=link))
-            db.session.commit()
-
+                try:
+                    future = executor.submit(change_file, file_path, '1ng1u8Kgh39ZOhIas8Sard8X3AaezH2Yt')
+                    link = future.result()
+                except:
+                    link = '1yuuUDqEpsB8O_3TIEMrqVy3EbGE2cRdT'
+                finally:
+                    Documento.query.filter_by(id=doc.id).update(dict(file_link=link))
+                    db.session.commit()
         flash('Documento cadastrado com sucesso!', 'success')
         return redirect(url_for('documentos.documento'))
     return render_template('documento/documento.html', title='Documentos', docs=docs, form=form)
@@ -83,8 +86,12 @@ def editar_documento(documento_id):
             file = save_file(form.picture.data)
             file_path = "app/static/file_storage/" + file
             with ThreadPoolExecutor(max_workers=1) as executor:
-                future = executor.submit(change_file, file_path, '1ng1u8Kgh39ZOhIas8Sard8X3AaezH2Yt')
-                link = future.result()
+                try:
+                    future = executor.submit(change_file, file_path, '1ng1u8Kgh39ZOhIas8Sard8X3AaezH2Yt')
+                    link = future.result()
+                except:
+                    link = '1yuuUDqEpsB8O_3TIEMrqVy3EbGE2cRdT'
+                finally:
 
         doc.titulo = form.titulo.data.lower().title()
         doc.autor = form.autor.data.lower().title()

@@ -144,9 +144,13 @@ def minha_conta():
             picture_file = save_file(form.picture.data)
             picture_path = "app/static/file_storage/" + picture_file
             with ThreadPoolExecutor(max_workers=1) as executor:
-                future = executor.submit(change_file, picture_path, '1rXtdkLm3jsrTqpv4Km_mzGmYOWoBjoph')
-                link = future.result()
-                Usuario.query.filter_by(id=current_user.id).update(dict(image_file_link=link))
+                try:
+                    future = executor.submit(change_file, picture_path, '1rXtdkLm3jsrTqpv4Km_mzGmYOWoBjoph')
+                    link = future.result()
+                except:
+                    link = '1fJoh2JNdbNStydU--h6To9uAgtP1gAOH'
+                finally:
+                    Usuario.query.filter_by(id=current_user.id).update(dict(image_file_link=link))
         Usuario.query.filter_by(id=current_user.id).update(dict(nome_usuario = form.nome_usuario.data, email = form.email.data,))
         Dados.query.filter_by(usuario_id=current_user.id).update(dict(dre = form.dre.data, periodo = form.periodo.data, curso = form.curso.data, nome = form.nome.data.lower().title()))
         db.session.commit()
