@@ -83,7 +83,7 @@ def editar_documento(documento_id):
     form = AdicionarDocumento()
     if form.validate_on_submit():
         if form.arquivo.data:
-            file = save_file(form.picture.data)
+            file = save_file(form.arquivo.data)
             file_path = "app/static/file_storage/" + file
             with ThreadPoolExecutor(max_workers=1) as executor:
                 try:
