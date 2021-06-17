@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h1>{{ title }} - Edição</h1>
 <div class="content-section">
     <form method="POST" action="">
         <!-- CSRF Token -->
@@ -65,16 +64,25 @@
             </div>
 
             <div class="form-group">
-                {{ form.link.label(class="form-control-label") }}
-                {% if form.link.errors %}
-                    {{ form.link(class="form-control form-control-lg is-invalid") }}
+                {{ form.arquivo.label() }}
+                {{ form.arquivo(class="form-control-file") }}
+                {% if form.arquivo.errors %}
+                    {% for error in form.arquivo.errors %}
+                        <span class="text-danger">{{ error }}</span></br>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.dono.label(class="form-control-label") }}
+                {% if form.dono.errors %}
+                    {{ form.dono(class="form-control form-control-lg is-invalid") }}
                     <div class="invalid-feedback">
-                        {% for error in form.link.errors %}
+                        {% for error in form.dono.errors %}
                             <span>{{ error }}</span>
                         {% endfor %}
                     </div>
                 {% else %}
-                    {{ form.link(class="form-control form-control-lg") }}
+                    {{ form.dono(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
         </fieldset>

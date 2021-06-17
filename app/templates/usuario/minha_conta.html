@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="content-section">
+      <div class="media">
+        <img class="rounded-circle account-img" src="http://drive.google.com/uc?export=view&id={{ current_user.image_file_link }}"> <!--Trazendo a imagem de perfil do usuário atualizada ao template-->
+        <div class="media-body">
+          <h3>{{ current_user.dados.nome }}</h3> <!--Trazendo o username do usuário atualizada ao template-->
+          <p class="text-secondary">{{ current_user.nome_usuario }} - {{ current_user.email }}</p> <!--Trazendo o email do usuário atualizado ao template-->
+          <p class="text-secondary">DRE: {{ current_user.dados.dre }}</p> <!--Trazendo o dre do usuário atualizado ao template-->
+          {% if not current_user.admin %}
+          <p class="text-secondary"> {{ current_user.dados.curso }} - {{ current_user.dados.periodo }}° período</p> <!--Trazendo o dre do usuário atualizado ao template-->
+          {% endif %}
+        </div>
+      </div>
+        <form method="POST" action="" enctype="multipart/form-data">
+          {{ form.hidden_tag() }}
+          <fieldset class="form-group">
+              <legend class="border-bottom mb-4">Informações da Conta</legend>
+              <div class="form-group">
+                  {{ form.nome_usuario.label(class="form-control-label") }}
+
+                  {% if form.nome_usuario.errors %}
+                      {{ form.nome_usuario(class="form-control form-control-lg is-invalid") }}
+                      <div class="invalid-feedback">
+                          {% for error in form.nome_usuario.errors %}
+                              <span>{{ error }}</span>
+                          {% endfor %}
+                      </div>
+                  {% else %}
+                      {{ form.nome_usuario(class="form-control form-control-lg") }}
+                  {% endif %}
+              </div>
+              <div class="form-group">
+                  {{ form.email.label(class="form-control-label") }}
+                  {% if form.email.errors %}
+                      {{ form.email(class="form-control form-control-lg is-invalid") }}
+                      <div class="invalid-feedback">
+                          {% for error in form.email.errors %}
+                              <span>{{ error }}</span>
+                          {% endfor %}
+                      </div>
+                  {% else %}
+                      {{ form.email(class="form-control form-control-lg") }}
+                  {% endif %}
+              </div>
+              <div class="form-group">
+                {{ form.nome.label(class="form-control-label") }}
+
+                {% if form.nome.errors %}
+                    {{ form.nome(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.nome.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.nome(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+              <div class="form-group">
+                {{ form.dre.label(class="form-control-label") }}
+
+                {% if form.dre.errors %}
+                    {{ form.dre(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.dre.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.dre(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+              <div class="form-group">
+                {{ form.curso.label(class="form-control-label") }}
+
+                {% if form.curso.errors %}
+                    {{ form.curso(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.curso.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.curso(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+              <div class="form-group">
+                {{ form.periodo.label(class="form-control-label") }}
+
+                {% if form.periodo.errors %}
+                    {{ form.periodo(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.periodo.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.periodo(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+              <div class="form-group">
+                  {{ form.picture.label() }}
+                  {{ form.picture(class="form-control-file") }}
+                  {% if form.picture.errors %}
+                      {% for error in form.picture.errors %}
+                          <span class="text-danger">{{ error }}</span></br>
+                      {% endfor %}
+                  {% endif %}
+              </div>
+          </fieldset>
+          <div class="form-group">
+              {{ form.submit(class="btn btn-outline-info") }}
+              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Excluir Conta</button>
+          </div>
+      </form>
+      <p style="padding: 15px 0 10px 0; font-size: 13px;">*O processo de mudança de foto pode levar alguns instantes. Sinta-se livre para continuar utilizando o site enquanto o processo é concluido.</p>
+    </div>
+     <!-- Modal -->
+     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteModalLabel">Excluir Conta?</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Cancelar">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <form action="{{ url_for('usuarios.excluir_conta')}}" method="POST">
+                <input class="btn btn-danger" type="submit" value="Deletar">
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock content %}

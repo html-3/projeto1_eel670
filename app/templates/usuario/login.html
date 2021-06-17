@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h1>{{ title }}</h1>
     <div class="content-section">
         <form method="POST" action="">
             <!-- CSRF Token -->
@@ -43,15 +42,15 @@
             </fieldset>
             <button type="submit" class="btn btn-default"> Confirmar </button>
                 <!-- Nao funciona AINDA, seria bom fzr, vlw flw -->
-                <small class="text-muted">
-                     <a class="ml-2" href="#">Esqueceu da sua senha?</a>
-                </small>
+            <small class="text-muted">
+                    <a class="ml-2" href="#">Esqueceu da sua senha?</a>
+            </small>
         </form>
     </div>
     <div class="border-top pt3">
         <small class="text-muted">
-            Não está cadastrado? <a class="ml-2" href="{{ url_for('cadastro') }}">Sign Up</a>
+            Não confirmou a sua conta? <a href="{{ url_for('usuarios.reenviar_confirmacao_logout')}}">Confirmar conta</a></br>
+            Não está cadastrado? <a class="ml-2" href="{{ url_for('usuarios.cadastro') }}">Inscrever-se</a>
         </small>
     </div>
-    <br><br><br><br><br><br><br>
 {% endblock content %}

@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h1>{{ title }}</h1>
     <div class="content-section">
         <form method="POST" action="">
             <!-- CSRF Token -->
@@ -127,7 +126,7 @@
     </div>
     <div class="border-top pt3">
         <small class="text-muted">
-            Já está cadastrado? <a class="ml-2" href="{{ url_for('login') }}">Login</a>
+            Já está cadastrado? <a class="ml-2" href="{{ url_for('usuarios.login') }}">Login</a>
         </small>
     </div>
 {% endblock content %}

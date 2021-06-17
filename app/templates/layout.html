@@ -4,19 +4,20 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-    <!-- Import CSS stylesheet -->
+    <!-- Importacao do CSS -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-    <!-- Nao foi possível adicionar um ícone -->
+
+    <!-- Icone do site implementado -->
     <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}">
     {% if title %}
-        <title>polidoc - {{ title }}</title>
+        <title>PoliDoc - {{ title }}</title>
     {% else %}
-        <title>polidoc</title>
+        <title>PoliDoc</title>
     {% endif %}
+
+    <!-- Styles extras, deveriam ir no CSS -->
     <style>
         body {
             background-color: #cfeedc;
@@ -35,60 +36,96 @@
             height:100%;
             overflow-x: hidden;
             }
+        #page-container {
+            position: relative;
+            min-height: 100vh;
+        }
+        #content-wrap {
+            padding-bottom: 4rem;    /* Footer height */
+        }
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 3.5rem;          /* Footer height */
+        }
     </style>
 </head>
 <body>
-    <!-- Navbar com Home, About, Login e Sign Up -->
-    <header class="site-header">    
+    <div id="page-container">
+    <div id="content-wrap">
+    <header class="site-header">
+        <!-- Navbar completo -->
         <nav class="navbar navbar-custom navbar-expand-md navbar-light fixed-top">
           <div class="container">
-            <a href="{{ url_for('home')}}">
-            <img id="logo" src="{{ url_for('static', filename='favicon.png') }}" style="height: 30px; "></a>
-            <a class="navbar-brand mr-4" href="{{ url_for('home') }}" style="padding-left:1em"><i>polidoc.com</i></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
+
+                <!-- Logo -->
+                <a href="{{ url_for('main.home')}}">
+                    <img id="logo" src="{{ url_for('static', filename='favicon.png') }}" style="height: 30px;">
+                </a>
+
+                <!-- Nome do site -->
+                <a class="navbar-brand mr-1" href="{{ url_for('main.home') }}" style="padding-left:1em"><i>PoliDoc</i></a>
+
+                <!-- Botao collapse -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>      
+                
             <div class="collapse navbar-collapse" id="navbarToggle">
-              <div class="navbar-nav mr-auto">
-              </div>
-            {% if current_user.is_authenticated %}
-              <div class="collapse navbar-collapse" id="navbarToggle">
-                <div class="navbar-nav mr-auto">
-                  <a class="nav-item nav-link" href="{{ url_for('documento') }}">Documentos</a>
-                  
-                  {% if current_user.admin %}
-                  <a class="nav-item nav-link" href="{{ url_for('lista_usuarios') }}">Usuarios</a>
-                  <!-- outras funcoes -->
-                  {% endif %}
-                </div>
-                <!-- Navbar Right Side -->
+
+                <!-- Menus do navbar completa -->
+                <div class="navbar-nav ml-auto">
                     <div class="navbar-nav">
-                        <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+
+                    <!-- Lista de usuarios exclusiva para os admins -->
+                    {% if current_user.admin %}
+                        {% if not request.path == '/lista_usuarios' %}
+                            <a class="nav-item nav-link" href="{{ url_for('usuarios.lista_usuarios') }}">Usuários</a>
+                        {% endif %}
+                    {% endif %}
+
+                    <!-- Menus do navbar responsivos quando logado -->
+                    {% if current_user.is_authenticated %}
+                        {% if request.path == '/documento' %}
+                            <a class="nav-item nav-link" href="{{ url_for('docentes.docente') }}">Docentes</a>
+                            <a class="nav-item nav-link" href="{{ url_for('usuarios.minha_conta') }}">Minha Conta</a>
+                        {% elif request.path == '/docente' %}
+                            <a class="nav-item nav-link" href="{{ url_for('documentos.documento') }}">Documentos</a>
+                            <a class="nav-item nav-link" href="{{ url_for('usuarios.minha_conta') }}">Minha Conta</a>
+                        {% elif request.path == '/minha_conta' %}
+                            <a class="nav-item nav-link" href="{{ url_for('documentos.documento') }}">Documentos</a>
+                            <a class="nav-item nav-link" href="{{ url_for('docentes.docente') }}">Docentes</a>
+                        {% else %}
+                            <a class="nav-item nav-link" href="{{ url_for('documentos.documento') }}">Documentos</a>
+                            <a class="nav-item nav-link" href="{{ url_for('docentes.docente') }}">Docentes</a>
+                            <a class="nav-item nav-link" href="{{ url_for('usuarios.minha_conta') }}">Minha Conta</a>
+                        {% endif %}
+                            <a class="nav-item nav-link" href="{{ url_for('usuarios.logout') }}">Logout</a>
+                    {% else %}
+
+                    <!-- Menus do navbar responsivos nao logado -->
+                        {% if request.path == '/login' %}
+                                <a class="nav-item nav-link" href="{{ url_for('usuarios.cadastro') }}">Cadastro</a>
+                        {% elif request.path == '/cadastro' %}
+                                <a class="nav-item nav-link" href="{{ url_for('usuarios.login') }}">Login</a>
+                        {% else %}
+                                <a class="nav-item nav-link" href="{{ url_for('usuarios.login') }}">Login</a>
+                                <a class="nav-item nav-link" href="{{ url_for('usuarios.cadastro') }}">Cadastro</a>
+                        {% endif %}
+                    {% endif %}
                     </div>
                 </div>
-            {% elif request.path == '/login' %}
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="{{ url_for('cadastro') }}">Cadastro</a>
             </div>
-            {% elif request.path == '/cadastro' %}
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
-            </div>
-            {% else %}
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
-                <a class="nav-item nav-link" href="{{ url_for('cadastro') }}">Cadastro</a>
-            </div>
-              </div>
-            {% endif %}
-            </div>
-          </div>
         </nav>
     </header>
-    <!-- Content container -->
+
+    <!-- Container geral do site -->
     <main role="main" class="container">
-    <div class="row">
-        <div class="col-md-8">
+    <div class="row justify-content-center">
+
+        <!-- Mensagens de erro -->
+        <div class="col-md-8 align-self-center">
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
             {% for category, message in messages %}
@@ -98,42 +135,39 @@
             {% endfor %}
             {% endif %}
             {% endwith %}
+
+            <!-- Titulo das paginas -->
+            {% if request.path == '/home' %}
+                <h1>Projeto 1 para EEL670</h1>
+            {% elif current_user.admin %}
+                <h1>{{ title }} - Moderação</h1>
+            {% elif doc %}
+                <h1>{{ title }} - {{ doc.titulo }}</h1>
+            {% elif doce %}
+                <h1>{{ title }} - {{ doce.titulo }}</h1>
+            {% else %}
+                <h1>{{ title }}</h1>
+            {% endif %}
+
+            <!-- Container real site -->
             {% block content %}{% endblock %}
         </div>
-        {% if not current_user.admin %}
-        <div class="col-md-4">
-            <div class="content-section">
-                {% if current_user.is_authenticated %}
-                    <h4>Seja Bem-vindo, @{{ current_user.nome_usuario }}! </h4>
-                {% else %}
-                    <h3>Seja Bem-vindo!</h3>
-                {% endif %}
-                <p class='text-muted'>Oferecemos serviços como:
-                <ul class="list-group">
-                    <li class="list-group-item list-group-item-light">Adição de documentos</li>
-                    <li class="list-group-item list-group-item-light">Acesse livros, listas e provas</li>
-                    <li class="list-group-item list-group-item-light">Gabarito incluidos 😎</li>
-                    <li class="list-group-item list-group-item-light">E mais!</li>
-                </ul>
-                </p>
-            </div>
-            </div>
-        {% endif %}
     </div>
-    
     </main>
-    <br><br><br>
-    <footer class="text-center text-lg-start bg-g text-muted" styele="">
+    </div>
+
+    <!-- Footer com link do github -->
+    <footer class="text-center text-lg-start bg-g text-muted">
         <a href="https://github.com/html-3/projeto1_eel670">
         <img src="{{ url_for('static', filename='github-logo.png') }}" style="height: 35px; margin: 15px;">
         </a>
     </footer>
+    </div>
+    <!-- Sem ideia doque faz isto, nao excluir -->
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    
-    
 </body>
 </html>

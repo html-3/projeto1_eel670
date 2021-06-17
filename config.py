@@ -8,7 +8,7 @@ class BaseConfig(object):
     SECRET_KEY = os.environ.get('SECRET_KEY')  or 'escolher uma chave'
     SECURITY_PASSWORD_SALT = 'bomsabadopvctbm'
     WTF_CSRF_SECRET_KEY = 'pq'
-    DEBUG = False
+    DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # Configuração email
