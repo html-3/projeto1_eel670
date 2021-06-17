@@ -30,7 +30,8 @@ class AdicionarDocumento(FlaskForm):
     dono = SelectField('Dono (Docente)', choices=lista_donos, validators=[
                         DataRequired(message="Favor inserir um dono válido.")])
 
-    arquivo = FileField('Adicionar arquivo', validators=[FileAllowed(['pdf'])])
+    arquivo = FileField('Adicionar arquivo', validators=[FileAllowed(['pdf']),
+                                                        DataRequired(message="Insira um arquivo")])
     submeter = SubmitField('Adicionar')
 
     def validate_doc(self, titulo):
