@@ -92,13 +92,12 @@ def editar_documento(documento_id):
                 except:
                     link = '1yuuUDqEpsB8O_3TIEMrqVy3EbGE2cRdT'
                 finally:
-
-        doc.titulo = form.titulo.data.lower().title()
-        doc.autor = form.autor.data.lower().title()
-        doc.tipo = form.tipo.data.lower().title()
-        doc.formato = form.formato.data.upper()
-        doc.file_link = link
-        doc.dono = Docente.query.filter_by(nome=form.dono.data).first()
+                    doc.titulo = form.titulo.data.lower().title()
+                    doc.autor = form.autor.data.lower().title()
+                    doc.tipo = form.tipo.data.lower().title()
+                    doc.formato = form.formato.data.upper()
+                    doc.file_link = link
+                    doc.dono = Docente.query.filter_by(nome=form.dono.data).first()
         # problema por suposto "immutable dict", revertido ao metodo anterior
         """
         Documento.query.filter_by(id=current_user.id).update(dict(file_link=link))
