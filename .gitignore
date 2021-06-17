@@ -2,7 +2,5 @@
 __pycache__
 config.py
 /site.db-journal
-/app/static/file_storage/*
-!/app/static/file_storage/a00f2a1b26176fb6.jpg
 gauth_credenciais.txt
 
