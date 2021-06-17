@@ -16,7 +16,7 @@
             <a class="text-right" href="{{ url_for('docentes.docente_esp', docente_id=doc.dono_id) }}">Docente</a> -
             {% endif %}   
             <a class="text-right" href="{{ url_for('documentos.documento_esp', documento_id=doc.id) }}">Acessar</a> -
-            <a class="text-right" href="http://drive.google.com/uc?export=download&id={{ doc.file_link }}">Download</a>
+            <a class="text-right" href="http://drive.google.com/uc?export=view&id={{ doc.file_link }}">Download</a>
         </div>
         
     </li>
